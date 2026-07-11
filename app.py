@@ -1,3 +1,5 @@
+
+
 import sys
 from datetime import datetime
 
@@ -5,25 +7,25 @@ import mysql.connector
 from flask import Flask, jsonify, redirect, render_template, request, session
 
 from config.config import Config
-from exception.exception import CalSyncException
-from logger.logger import logger
+#from exception.exception import CalSyncException
+#from logger.logger import logger
 
 app = Flask(__name__)
 app.secret_key = Config.SECRET_KEY
 
-logger.info("CalSync application started.")
+#logger.info("CalSync application started.")
 
 
 # ── DB CONNECTION ─────────────────────────────────────────────
 def get_db():
     try:
         return mysql.connector.connect(
-            host=Config.MYSQL_HOST,
-            port=Config.MYSQL_PORT,
-            user=Config.MYSQL_USER,
-            password=Config.MYSQL_PASSWORD,
-            database=Config.MYSQL_DATABASE,
-        )
+        host=Config.MYSQL_HOST,
+        port=Config.MYSQL_PORT,
+        user=Config.MYSQL_USER,
+        password=Config.MYSQL_PASSWORD,
+        database=Config.MYSQL_DATABASE,
+    )
 
     except Exception as e:
         logger.error(e)
@@ -363,4 +365,10 @@ def respond_invitation(inv_id):
 
 # ── RUN ───────────────────────────────────────────────────────
 if __name__ == "__main__":
-    app.run(debug=True)
+    print("Before app.run")
+    app.run(
+        host="127.0.0.1",
+        port=8000,      # <-- change this
+        debug=True,
+        use_reloader=False
+    )

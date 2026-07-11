@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="3200" height="3600" viewBox="0 0 3200 3600" xmlns="http://www.w3.org/2000/svg">
+<style>
+  text { font-family: Arial, sans-serif; font-size: 15px; fill: #111; }
+  .er  { fill: #cce0f5; stroke: #1a3a6c; stroke-width: 2.5; }
+  .rd  { fill: #fffacd; stroke: #8B6914; stroke-width: 2; }
+  .at  { fill: #ffffff; stroke: #444; stroke-width: 1.5; }
+  .ln  { stroke: #444; stroke-width: 1.5; fill: none; }
+  .ca  { font-size: 16px; font-weight: bold; fill: #000; }
+  .pk  { text-decoration: underline; }
+  .eb  { font-weight: bold; font-size: 15px; }
+  .rb  { font-weight: bold; font-size: 13px; }
+</style>
+
+<rect width="3200" height="3600" fill="#fafafa"/>
+
+
+<rect class="er" x="1330" y="200" width="140" height="38"/>
+<text x="1400" y="224" text-anchor="middle" class="eb">USERS</text>
+<ellipse class="at" cx="1110" cy="120" rx="52" ry="20"/><text x="1110" y="124" text-anchor="middle" class="pk">user_id</text>
+<line class="ln" x1="1160" y1="126" x2="1332" y2="204"/>
+<ellipse class="at" cx="1260" cy="110" rx="36" ry="18"/><text x="1260" y="114" text-anchor="middle">name</text>
+<line class="ln" x1="1268" y1="126" x2="1355" y2="200"/>
+<ellipse class="at" cx="1400" cy="100" rx="36" ry="18"/><text x="1400" y="104" text-anchor="middle">email</text>
+<line class="ln" x1="1400" y1="116" x2="1400" y2="200"/>
+<ellipse class="at" cx="1540" cy="110" rx="48" ry="18"/><text x="1540" y="114" text-anchor="middle">password</text>
+<line class="ln" x1="1524" y1="124" x2="1446" y2="200"/>
+<ellipse class="at" cx="1690" cy="120" rx="54" ry="20"/><text x="1690" y="124" text-anchor="middle">created_at</text>
+<line class="ln" x1="1638" y1="126" x2="1468" y2="204"/>
+
+
+<rect class="er" x="100" y="280" width="120" height="38"/>
+<text x="160" y="304" text-anchor="middle" class="eb">ROLES</text>
+<ellipse class="at" cx="60" cy="260" rx="40" ry="18"/><text x="60" y="264" text-anchor="middle" class="pk">role_id</text>
+<line class="ln" x1="98" y1="262" x2="102" y2="278"/>
+<ellipse class="at" cx="56" cy="326" rx="52" ry="18"/><text x="56" y="330" text-anchor="middle">role_name</text>
+<line class="ln" x1="108" y1="322" x2="100" y2="316"/>
+
+<line class="ln" x1="220" y1="299" x2="340" y2="299"/>
+<text class="ca" x="252" y="291">1</text>
+<polygon class="rd" points="340,299 368,318 340,337 312,318"/>
+<text x="340" y="322" text-anchor="middle" class="rb">OF_ROLE</text>
+<line class="ln" x1="368" y1="318" x2="460" y2="318"/>
+<text class="ca" x="406" y="310">N</text>
+
+<rect class="er" x="460" y="304" width="140" height="38"/>
+<text x="530" y="328" text-anchor="middle" class="eb">USER_ROLES</text>
+<ellipse class="at" cx="380" cy="358" rx="58" ry="18"/><text x="380" y="362" text-anchor="middle" class="pk">user_id FK</text>
+<line class="ln" x1="434" y1="358" x2="462" y2="336"/>
+<ellipse class="at" cx="380" cy="392" rx="56" ry="18"/><text x="380" y="396" text-anchor="middle" class="pk">role_id FK</text>
+<line class="ln" x1="436" y1="390" x2="462" y2="342"/>
+
+<line class="ln" x1="600" y1="318" x2="780" y2="280"/>
+<text class="ca" x="680" y="294">M</text>
+<polygon class="rd" points="780,280 812,299 780,318 748,299"/>
+<text x="780" y="303" text-anchor="middle" class="rb">ASSIGNED</text>
+<line class="ln" x1="812" y1="299" x2="1000" y2="260"/>
+<text class="ca" x="900" y="276">N</text>
+<line class="ln" x1="1000" y1="260" x2="1330" y2="226"/>
+
+
+
+<line class="ln" x1="1470" y1="210" x2="1800" y2="210"/>
+<text class="ca" x="1620" y="203">1</text>
+<polygon class="rd" points="1800,210 1832,229 1800,248 1768,229"/>
+<text x="1800" y="233" text-anchor="middle" class="rb">HAS_SESSION</text>
+<line class="ln" x1="1832" y1="229" x2="1980" y2="229"/>
+<text class="ca" x="1900" y="222">N</text>
+
+<rect class="er" x="1980" y="215" width="180" height="38"/>
+<text x="2070" y="239" text-anchor="middle" class="eb">LOGIN_SESSIONS</text>
+<ellipse class="at" cx="2220" cy="204" rx="54" ry="18"/><text x="2220" y="208" text-anchor="middle" class="pk">session_id</text>
+<line class="ln" x1="2168" y1="206" x2="2158" y2="216"/>
+<ellipse class="at" cx="2224" cy="238" rx="58" ry="18"/><text x="2224" y="242" text-anchor="middle">login_time</text>
+<line class="ln" x1="2162" y1="235" x2="2160" y2="232"/>
+<ellipse class="at" cx="2224" cy="272" rx="62" ry="18"/><text x="2224" y="276" text-anchor="middle">logout_time</text>
+<line class="ln" x1="2160" y1="264" x2="2160" y2="252"/>
+
+<line class="ln" x1="1470" y1="222" x2="1800" y2="330"/>
+<text class="ca" x="1620" y="290">1</text>
+<polygon class="rd" points="1800,330 1832,349 1800,368 1768,349"/>
+<text x="1800" y="353" text-anchor="middle" class="rb">HAS_PROFILE</text>
+<line class="ln" x1="1832" y1="349" x2="1980" y2="349"/>
+<text class="ca" x="1900" y="342">1</text>
+
+<rect class="er" x="1980" y="335" width="160" height="38"/>
+<text x="2060" y="359" text-anchor="middle" class="eb">USER_PROFILES</text>
+<ellipse class="at" cx="2200" cy="324" rx="52" ry="18"/><text x="2200" y="328" text-anchor="middle" class="pk">profile_id</text>
+<line class="ln" x1="2150" y1="326" x2="2140" y2="337"/>
+<ellipse class="at" cx="2200" cy="358" rx="38" ry="18"/><text x="2200" y="362" text-anchor="middle">phone</text>
+<line class="ln" x1="2164" y1="356" x2="2140" y2="352"/>
+<ellipse class="at" cx="2200" cy="392" rx="30" ry="18"/><text x="2200" y="396" text-anchor="middle">bio</text>
+<line class="ln" x1="2172" y1="383" x2="2140" y2="370"/>
+
+<line class="ln" x1="1470" y1="234" x2="1800" y2="460"/>
+<text class="ca" x="1620" y="380">1</text>
+<polygon class="rd" points="1800,460 1832,479 1800,498 1768,479"/>
+<text x="1800" y="483" text-anchor="middle" class="rb">HAS_PREFS</text>
+<line class="ln" x1="1832" y1="479" x2="1980" y2="479"/>
+<text class="ca" x="1900" y="472">1</text>
+
+<rect class="er" x="1980" y="465" width="200" height="38"/>
+<text x="2080" y="489" text-anchor="middle" class="eb">USER_PREFERENCES</text>
+<ellipse class="at" cx="2244" cy="454" rx="64" ry="18"/><text x="2244" y="458" text-anchor="middle" class="pk">preference_id</text>
+<line class="ln" x1="2182" y1="456" x2="2180" y2="467"/>
+<ellipse class="at" cx="2244" cy="488" rx="38" ry="18"/><text x="2244" y="492" text-anchor="middle">theme</text>
+<line class="ln" x1="2182" y1="486" x2="2180" y2="484"/>
+<ellipse class="at" cx="2244" cy="522" rx="50" ry="18"/><text x="2244" y="526" text-anchor="middle">timezone</text>
+<line class="ln" x1="2184" y1="514" x2="2180" y2="502"/>
+
+
+
+<line class="ln" x1="1400" y1="238" x2="1400" y2="570"/>
+<text class="ca" x="1410" y="410">1</text>
+<polygon class="rd" points="1400,570 1432,590 1400,610 1368,590"/>
+<text x="1400" y="594" text-anchor="middle" class="rb">CREATES</text>
+<line class="ln" x1="1400" y1="610" x2="1400" y2="680"/>
+<text class="ca" x="1410" y="652">N</text>
+
+<rect class="er" x="1330" y="680" width="140" height="38"/>
+<text x="1400" y="704" text-anchor="middle" class="eb">EVENTS</text>
+<ellipse class="at" cx="1170" cy="644" rx="52" ry="20"/><text x="1170" y="648" text-anchor="middle" class="pk">event_id</text>
+<line class="ln" x1="1220" y1="648" x2="1332" y2="688"/>
+<ellipse class="at" cx="1290" cy="630" rx="34" ry="18"/><text x="1290" y="634" text-anchor="middle">title</text>
+<line class="ln" x1="1298" y1="646" x2="1348" y2="680"/>
+<ellipse class="at" cx="1400" cy="624" rx="52" ry="18"/><text x="1400" y="628" text-anchor="middle">start_time</text>
+<line class="ln" x1="1400" y1="640" x2="1400" y2="680"/>
+<ellipse class="at" cx="1510" cy="630" rx="50" ry="18"/><text x="1510" y="634" text-anchor="middle">end_time</text>
+<line class="ln" x1="1500" y1="646" x2="1452" y2="680"/>
+<ellipse class="at" cx="1640" cy="644" rx="56" ry="20"/><text x="1640" y="648" text-anchor="middle">description</text>
+<line class="ln" x1="1586" y1="648" x2="1468" y2="684"/>
+
+
+
+<line class="ln" x1="1330" y1="696" x2="1080" y2="696"/>
+<text class="ca" x="1186" y="688">N</text>
+<polygon class="rd" points="1080,696 1048,716 1080,736 1112,716"/>
+<text x="1080" y="720" text-anchor="middle" class="rb">HAS_TYPE</text>
+<line class="ln" x1="1048" y1="716" x2="880" y2="716"/>
+<text class="ca" x="956" y="708">1</text>
+<rect class="er" x="680" y="702" width="200" height="38"/>
+<text x="780" y="726" text-anchor="middle" class="eb">EVENT_TYPES</text>
+<ellipse class="at" cx="590" cy="692" rx="44" ry="18"/><text x="590" y="696" text-anchor="middle" class="pk">type_id</text>
+<line class="ln" x1="632" y1="694" x2="682" y2="706"/>
+<ellipse class="at" cx="584" cy="726" rx="52" ry="18"/><text x="584" y="730" text-anchor="middle">type_name</text>
+<line class="ln" x1="636" y1="724" x2="680" y2="720"/>
+
+<line class="ln" x1="1330" y1="706" x2="1080" y2="810"/>
+<text class="ca" x="1192" y="768">N</text>
+<polygon class="rd" points="1080,810 1048,830 1080,850 1112,830"/>
+<text x="1080" y="834" text-anchor="middle" class="rb">HAS_STATUS</text>
+<line class="ln" x1="1048" y1="830" x2="880" y2="830"/>
+<text class="ca" x="956" y="822">1</text>
+<rect class="er" x="680" y="816" width="200" height="38"/>
+<text x="780" y="840" text-anchor="middle" class="eb">EVENT_STATUS</text>
+<ellipse class="at" cx="584" cy="806" rx="48" ry="18"/><text x="584" y="810" text-anchor="middle" class="pk">status_id</text>
+<line class="ln" x1="630" y1="808" x2="682" y2="820"/>
+<ellipse class="at" cx="578" cy="840" rx="58" ry="18"/><text x="578" y="844" text-anchor="middle">status_name</text>
+<line class="ln" x1="636" y1="838" x2="680" y2="834"/>
+
+<line class="ln" x1="1330" y1="714" x2="1080" y2="940"/>
+<text class="ca" x="1192" y="848">N</text>
+<polygon class="rd" points="1080,940 1048,960 1080,980 1112,960"/>
+<text x="1080" y="964" text-anchor="middle" class="rb">HAS_VISIBILITY</text>
+<line class="ln" x1="1048" y1="960" x2="880" y2="960"/>
+<text class="ca" x="956" y="952">1</text>
+<rect class="er" x="680" y="946" width="200" height="38"/>
+<text x="780" y="970" text-anchor="middle" class="eb">EVENT_VISIBILITY</text>
+<ellipse class="at" cx="574" cy="936" rx="58" ry="18"/><text x="574" y="940" text-anchor="middle" class="pk">visibility_id</text>
+<line class="ln" x1="630" y1="938" x2="682" y2="950"/>
+<ellipse class="at" cx="566" cy="970" rx="74" ry="18"/><text x="566" y="974" text-anchor="middle">visibility_name</text>
+<line class="ln" x1="640" y1="968" x2="680" y2="964"/>
+
+<line class="ln" x1="1330" y1="722" x2="1080" y2="1080"/>
+<text class="ca" x="1192" y="940">N</text>
+<polygon class="rd" points="1080,1080 1048,1100 1080,1120 1112,1100"/>
+<text x="1080" y="1104" text-anchor="middle" class="rb">LOCATED_AT</text>
+<line class="ln" x1="1048" y1="1100" x2="880" y2="1100"/>
+<text class="ca" x="956" y="1092">1</text>
+<rect class="er" x="680" y="1086" width="200" height="38"/>
+<text x="780" y="1110" text-anchor="middle" class="eb">EVENT_LOCATIONS</text>
+<ellipse class="at" cx="570" cy="1076" rx="60" ry="18"/><text x="570" y="1080" text-anchor="middle" class="pk">location_id</text>
+<line class="ln" x1="628" y1="1078" x2="682" y2="1090"/>
+<ellipse class="at" cx="562" cy="1110" rx="72" ry="18"/><text x="562" y="1114" text-anchor="middle">location_name</text>
+<line class="ln" x1="634" y1="1108" x2="680" y2="1104"/>
+<ellipse class="at" cx="562" cy="1144" rx="48" ry="18"/><text x="562" y="1148" text-anchor="middle">address</text>
+<line class="ln" x1="608" y1="1138" x2="688" y2="1118"/>
+
+
+
+<line class="ln" x1="1470" y1="696" x2="1720" y2="696"/>
+<text class="ca" x="1577" y="688">N</text>
+<polygon class="rd" points="1720,696 1752,716 1720,736 1688,716"/>
+<text x="1720" y="720" text-anchor="middle" class="rb">PARTICIPATES</text>
+<line class="ln" x1="1752" y1="716" x2="1900" y2="716"/>
+<text class="ca" x="1820" y="708">N</text>
+
+<rect class="er" x="1900" y="702" width="200" height="38"/>
+<text x="2000" y="726" text-anchor="middle" class="eb">EVENT_PARTICIPANTS</text>
+<ellipse class="at" cx="2166" cy="692" rx="58" ry="18"/><text x="2166" y="696" text-anchor="middle" class="pk">event_id FK</text>
+<line class="ln" x1="2110" y1="694" x2="2100" y2="704"/>
+<ellipse class="at" cx="2170" cy="726" rx="56" ry="18"/><text x="2170" y="730" text-anchor="middle" class="pk">user_id FK</text>
+<line class="ln" x1="2112" y1="724" x2="2100" y2="720"/>
+<ellipse class="at" cx="2166" cy="758" rx="54" ry="18"/><text x="2166" y="762" text-anchor="middle">added_at</text>
+<line class="ln" x1="2112" y1="752" x2="2100" y2="740"/>
+
+<line class="ln" x1="1470" y1="234" x2="1752" y2="714"/>
+
+<line class="ln" x1="2000" y1="740" x2="2000" y2="810"/>
+<text class="ca" x="2010" y="782">N</text>
+<polygon class="rd" points="2000,810 2032,830 2000,850 1968,830"/>
+<text x="2000" y="834" text-anchor="middle" class="rb">HAS_STATUS</text>
+<line class="ln" x1="2000" y1="850" x2="2000" y2="900"/>
+<text class="ca" x="2010" y="882">1</text>
+<rect class="er" x="1900" y="900" width="200" height="38"/>
+<text x="2000" y="924" text-anchor="middle" class="eb">PARTICIPANT_STATUS</text>
+<ellipse class="at" cx="2166" cy="890" rx="52" ry="18"/><text x="2166" y="894" text-anchor="middle" class="pk">status_id</text>
+<line class="ln" x1="2114" y1="892" x2="2100" y2="902"/>
+<ellipse class="at" cx="2170" cy="924" rx="60" ry="18"/><text x="2170" y="928" text-anchor="middle">status_name</text>
+<line class="ln" x1="2112" y1="922" x2="2100" y2="918"/>
+
+<line class="ln" x1="1470" y1="706" x2="1720" y2="1060"/>
+<text class="ca" x="1577" y="900">1</text>
+<polygon class="rd" points="1720,1060 1752,1080 1720,1100 1688,1080"/>
+<text x="1720" y="1084" text-anchor="middle" class="rb">SENDS_INVITE</text>
+<line class="ln" x1="1752" y1="1080" x2="1900" y2="1080"/>
+<text class="ca" x="1820" y="1072">N</text>
+<line class="ln" x1="1470" y1="234" x2="1688" y2="1078"/>
+
+<rect class="er" x="1900" y="1066" width="200" height="38"/>
+<text x="2000" y="1090" text-anchor="middle" class="eb">EVENT_INVITATIONS</text>
+<ellipse class="at" cx="2166" cy="1056" rx="66" ry="18"/><text x="2166" y="1060" text-anchor="middle" class="pk">invitation_id</text>
+<line class="ln" x1="2102" y1="1058" x2="2100" y2="1068"/>
+<ellipse class="at" cx="2166" cy="1090" rx="48" ry="18"/><text x="2166" y="1094" text-anchor="middle">sent_at</text>
+<line class="ln" x1="2120" y1="1088" x2="2100" y2="1084"/>
+
+<line class="ln" x1="2000" y1="1104" x2="2000" y2="1180"/>
+<text class="ca" x="2010" y="1148">1</text>
+<polygon class="rd" points="2000,1180 2032,1200 2000,1220 1968,1200"/>
+<text x="2000" y="1204" text-anchor="middle" class="rb">RECEIVES</text>
+<line class="ln" x1="2000" y1="1220" x2="2000" y2="1290"/>
+<text class="ca" x="2010" y="1262">N</text>
+<rect class="er" x="1900" y="1290" width="210" height="38"/>
+<text x="2005" y="1314" text-anchor="middle" class="eb">INVITATION_RESPONSES</text>
+<ellipse class="at" cx="2176" cy="1280" rx="62" ry="18"/><text x="2176" y="1284" text-anchor="middle" class="pk">response_id</text>
+<line class="ln" x1="2116" y1="1282" x2="2110" y2="1292"/>
+<ellipse class="at" cx="2180" cy="1314" rx="70" ry="18"/><text x="2180" y="1318" text-anchor="middle">response_time</text>
+<line class="ln" x1="2112" y1="1312" x2="2110" y2="1308"/>
+
+<line class="ln" x1="1470" y1="714" x2="1720" y2="1440"/>
+<text class="ca" x="1577" y="1120">M</text>
+<polygon class="rd" points="1720,1440 1752,1460 1720,1480 1688,1460"/>
+<text x="1720" y="1464" text-anchor="middle" class="rb">TAGGED_WITH</text>
+<line class="ln" x1="1752" y1="1460" x2="1900" y2="1460"/>
+<text class="ca" x="1820" y="1452">N</text>
+<rect class="er" x="1900" y="1446" width="180" height="38"/>
+<text x="1990" y="1470" text-anchor="middle" class="eb">EVENT_TAG_MAP</text>
+<ellipse class="at" cx="2148" cy="1436" rx="58" ry="18"/><text x="2148" y="1440" text-anchor="middle" class="pk">event_id FK</text>
+<line class="ln" x1="2092" y1="1438" x2="2080" y2="1448"/>
+<ellipse class="at" cx="2148" cy="1468" rx="54" ry="18"/><text x="2148" y="1472" text-anchor="middle" class="pk">tag_id FK</text>
+<line class="ln" x1="2096" y1="1466" x2="2080" y2="1462"/>
+
+<line class="ln" x1="1990" y1="1484" x2="1990" y2="1560"/>
+<text class="ca" x="2000" y="1526">N</text>
+<polygon class="rd" points="1990,1560 2022,1580 1990,1600 1958,1580"/>
+<text x="1990" y="1584" text-anchor="middle" class="rb">IS_TAG</text>
+<line class="ln" x1="1990" y1="1600" x2="1990" y2="1660"/>
+<text class="ca" x="2000" y="1636">1</text>
+<rect class="er" x="1900" y="1660" width="180" height="38"/>
+<text x="1990" y="1684" text-anchor="middle" class="eb">EVENT_TAGS</text>
+<ellipse class="at" cx="2148" cy="1650" rx="42" ry="18"/><text x="2148" y="1654" text-anchor="middle" class="pk">tag_id</text>
+<line class="ln" x1="2108" y1="1652" x2="2080" y2="1662"/>
+<ellipse class="at" cx="2148" cy="1684" rx="52" ry="18"/><text x="2148" y="1688" text-anchor="middle">tag_name</text>
+<line class="ln" x1="2098" y1="1682" x2="2080" y2="1676"/>
+
+
+
+<line class="ln" x1="1380" y1="718" x2="1080" y2="1280"/>
+<text class="ca" x="1220" y="1020">1</text>
+<polygon class="rd" points="1080,1280 1048,1300 1080,1320 1112,1300"/>
+<text x="1080" y="1304" text-anchor="middle" class="rb">HAS_RECURRENCE</text>
+<line class="ln" x1="1048" y1="1300" x2="880" y2="1300"/>
+<text class="ca" x="956" y="1292">1</text>
+<rect class="er" x="620" y="1286" width="260" height="38"/>
+<text x="750" y="1310" text-anchor="middle" class="eb">EVENT_RECURRENCE_MAP</text>
+<ellipse class="at" cx="512" cy="1274" rx="62" ry="18"/><text x="512" y="1278" text-anchor="middle" class="pk">event_id FK</text>
+<line class="ln" x1="572" y1="1276" x2="622" y2="1290"/>
+<ellipse class="at" cx="504" cy="1308" rx="76" ry="18"/><text x="504" y="1312" text-anchor="middle" class="pk">recurrence_id FK</text>
+<line class="ln" x1="580" y1="1306" x2="620" y2="1300"/>
+
+<line class="ln" x1="750" y1="1324" x2="750" y2="1420"/>
+<text class="ca" x="760" y="1378">N</text>
+<polygon class="rd" points="750,1420 782,1440 750,1460 718,1440"/>
+<text x="750" y="1444" text-anchor="middle" class="rb">FOLLOWS_RULE</text>
+<line class="ln" x1="750" y1="1460" x2="750" y2="1530"/>
+<text class="ca" x="760" y="1502">1</text>
+<rect class="er" x="630" y="1530" width="240" height="38"/>
+<text x="750" y="1554" text-anchor="middle" class="eb">RECURRENCE_RULES</text>
+<ellipse class="at" cx="500" cy="1518" rx="70" ry="18"/><text x="500" y="1522" text-anchor="middle" class="pk">recurrence_id</text>
+<line class="ln" x1="568" y1="1520" x2="632" y2="1534"/>
+<ellipse class="at" cx="494" cy="1552" rx="54" ry="18"/><text x="494" y="1556" text-anchor="middle">start_date</text>
+<line class="ln" x1="548" y1="1550" x2="630" y2="1546"/>
+<ellipse class="at" cx="494" cy="1586" rx="52" ry="18"/><text x="494" y="1590" text-anchor="middle">end_date</text>
+<line class="ln" x1="546" y1="1580" x2="638" y2="1562"/>
+
+<line class="ln" x1="870" y1="1548" x2="1020" y2="1548"/>
+<text class="ca" x="924" y="1540">1</text>
+<polygon class="rd" points="1020,1548 1052,1568 1020,1588 988,1568"/>
+<text x="1020" y="1572" text-anchor="middle" class="rb">HAS_DAYS</text>
+<line class="ln" x1="1052" y1="1568" x2="1200" y2="1568"/>
+<text class="ca" x="1124" y="1560">N</text>
+<rect class="er" x="1200" y="1554" width="220" height="38"/>
+<text x="1310" y="1578" text-anchor="middle" class="eb">RECURRENCE_DAYS</text>
+<ellipse class="at" cx="1490" cy="1544" rx="76" ry="18"/><text x="1490" y="1548" text-anchor="middle" class="pk">recurrence_day_id</text>
+<line class="ln" x1="1416" y1="1546" x2="1420" y2="1556"/>
+<ellipse class="at" cx="1490" cy="1578" rx="62" ry="18"/><text x="1490" y="1582" text-anchor="middle">day_of_week</text>
+<line class="ln" x1="1422" y1="1574" x2="1420" y2="1570"/>
+
+<line class="ln" x1="750" y1="1568" x2="750" y2="1660"/>
+<text class="ca" x="760" y="1620">N</text>
+<polygon class="rd" points="750,1660 782,1680 750,1700 718,1680"/>
+<text x="750" y="1684" text-anchor="middle" class="rb">OF_TYPE</text>
+<line class="ln" x1="750" y1="1700" x2="750" y2="1770"/>
+<text class="ca" x="760" y="1742">1</text>
+<rect class="er" x="630" y="1770" width="240" height="38"/>
+<text x="750" y="1794" text-anchor="middle" class="eb">RECURRENCE_TYPES</text>
+<ellipse class="at" cx="494" cy="1758" rx="80" ry="18"/><text x="494" y="1762" text-anchor="middle" class="pk">recurrence_type_id</text>
+<line class="ln" x1="572" y1="1760" x2="632" y2="1774"/>
+<ellipse class="at" cx="490" cy="1792" rx="56" ry="18"/><text x="490" y="1796" text-anchor="middle">type_name</text>
+<line class="ln" x1="546" y1="1790" x2="630" y2="1786"/>
+
+
+
+<line class="ln" x1="1350" y1="718" x2="1080" y2="2000"/>
+<text class="ca" x="1208" y="1400">1</text>
+<polygon class="rd" points="1080,2000 1048,2020 1080,2040 1112,2020"/>
+<text x="1080" y="2024" text-anchor="middle" class="rb">TRIGGERS</text>
+<line class="ln" x1="1048" y1="2020" x2="880" y2="2020"/>
+<text class="ca" x="956" y="2012">N</text>
+<line class="ln" x1="1330" y1="234" x2="1048" y2="2018"/>
+
+<rect class="er" x="620" y="2006" width="260" height="38"/>
+<text x="750" y="2030" text-anchor="middle" class="eb">NOTIFICATIONS</text>
+<ellipse class="at" cx="494" cy="1994" rx="76" ry="18"/><text x="494" y="1998" text-anchor="middle" class="pk">notification_id</text>
+<line class="ln" x1="568" y1="1996" x2="622" y2="2010"/>
+<ellipse class="at" cx="490" cy="2028" rx="48" ry="18"/><text x="490" y="2032" text-anchor="middle">message</text>
+<line class="ln" x1="538" y1="2026" x2="620" y2="2022"/>
+
+<line class="ln" x1="750" y1="2044" x2="750" y2="2140"/>
+<text class="ca" x="760" y="2098">N</text>
+<polygon class="rd" points="750,2140 782,2160 750,2180 718,2160"/>
+<text x="750" y="2164" text-anchor="middle" class="rb">OF_TYPE</text>
+<line class="ln" x1="750" y1="2180" x2="750" y2="2260"/>
+<text class="ca" x="760" y="2228">1</text>
+<rect class="er" x="620" y="2260" width="260" height="38"/>
+<text x="750" y="2284" text-anchor="middle" class="eb">NOTIFICATION_TYPES</text>
+<ellipse class="at" cx="488" cy="2248" rx="46" ry="18"/><text x="488" y="2252" text-anchor="middle" class="pk">type_id</text>
+<line class="ln" x1="532" y1="2250" x2="622" y2="2264"/>
+<ellipse class="at" cx="484" cy="2282" rx="54" ry="18"/><text x="484" y="2286" text-anchor="middle">type_name</text>
+<line class="ln" x1="538" y1="2280" x2="620" y2="2276"/>
+
+<line class="ln" x1="880" y1="2024" x2="1020" y2="2024"/>
+<text class="ca" x="932" y="2016">1</text>
+<polygon class="rd" points="1020,2024 1052,2044 1020,2064 988,2044"/>
+<text x="1020" y="2048" text-anchor="middle" class="rb">LOGGED_AS</text>
+<line class="ln" x1="1052" y1="2044" x2="1200" y2="2044"/>
+<text class="ca" x="1124" y="2036">N</text>
+<rect class="er" x="1200" y="2030" width="220" height="38"/>
+<text x="1310" y="2054" text-anchor="middle" class="eb">NOTIFICATION_LOGS</text>
+<ellipse class="at" cx="1490" cy="2020" rx="44" ry="18"/><text x="1490" y="2024" text-anchor="middle" class="pk">log_id</text>
+<line class="ln" x1="1448" y1="2022" x2="1420" y2="2032"/>
+<ellipse class="at" cx="1492" cy="2054" rx="52" ry="18"/><text x="1492" y="2058" text-anchor="middle">sent_time</text>
+<line class="ln" x1="1442" y1="2050" x2="1420" y2="2046"/>
+<ellipse class="at" cx="1490" cy="2088" rx="40" ry="18"/><text x="1490" y="2092" text-anchor="middle">status</text>
+<line class="ln" x1="1452" y1="2080" x2="1420" y2="2064"/>
+
+
+
+<line class="ln" x1="1470" y1="722" x2="1720" y2="1800"/>
+<text class="ca" x="1577" y="1340">1</text>
+<polygon class="rd" points="1720,1800 1752,1820 1720,1840 1688,1820"/>
+<text x="1720" y="1824" text-anchor="middle" class="rb">REMINDS</text>
+<line class="ln" x1="1752" y1="1820" x2="1900" y2="1820"/>
+<text class="ca" x="1820" y="1812">N</text>
+<line class="ln" x1="1470" y1="234" x2="1688" y2="1818"/>
+
+<rect class="er" x="1900" y="1806" width="160" height="38"/>
+<text x="1980" y="1830" text-anchor="middle" class="eb">REMINDERS</text>
+<ellipse class="at" cx="2124" cy="1796" rx="58" ry="18"/><text x="2124" y="1800" text-anchor="middle" class="pk">reminder_id</text>
+<line class="ln" x1="2068" y1="1798" x2="2060" y2="1808"/>
+<ellipse class="at" cx="2128" cy="1830" rx="76" ry="18"/><text x="2128" y="1834" text-anchor="middle">remind_before</text>
+<line class="ln" x1="2056" y1="1828" x2="2060" y2="1824"/>
+
+
+
+<line class="ln" x1="1330" y1="242" x2="1080" y2="2300"/>
+<text class="ca" x="1198" y="1850">1</text>
+<polygon class="rd" points="1080,2300 1048,2320 1080,2340 1112,2320"/>
+<text x="1080" y="2324" text-anchor="middle" class="rb">LOGS_ACTION</text>
+<line class="ln" x1="1048" y1="2320" x2="880" y2="2320"/>
+<text class="ca" x="956" y="2312">N</text>
+<rect class="er" x="620" y="2306" width="260" height="38"/>
+<text x="750" y="2330" text-anchor="middle" class="eb">ACTIVITY_LOGS</text>
+<ellipse class="at" cx="488" cy="2294" rx="44" ry="18"/><text x="488" y="2298" text-anchor="middle" class="pk">log_id</text>
+<line class="ln" x1="530" y1="2296" x2="622" y2="2310"/>
+<ellipse class="at" cx="484" cy="2328" rx="42" ry="18"/><text x="484" y="2332" text-anchor="middle">action</text>
+<line class="ln" x1="526" y1="2326" x2="620" y2="2322"/>
+<ellipse class="at" cx="480" cy="2362" rx="58" ry="18"/><text x="480" y="2366" text-anchor="middle">action_time</text>
+<line class="ln" x1="538" y1="2356" x2="634" y2="2340"/>
+
+
+
+<line class="ln" x1="1470" y1="730" x2="1720" y2="2300"/>
+<text class="ca" x="1577" y="1620">N</text>
+<polygon class="rd" points="1720,2300 1752,2320 1720,2340 1688,2320"/>
+<text x="1720" y="2324" text-anchor="middle" class="rb">AUDITS</text>
+<line class="ln" x1="1752" y1="2320" x2="1900" y2="2320"/>
+<text class="ca" x="1820" y="2312">N</text>
+<rect class="er" x="1900" y="2306" width="160" height="38"/>
+<text x="1980" y="2330" text-anchor="middle" class="eb">AUDIT_TRAIL</text>
+<ellipse class="at" cx="2124" cy="2296" rx="56" ry="18"/><text x="2124" y="2300" text-anchor="middle" class="pk">audit_id</text>
+<line class="ln" x1="2070" y1="2298" x2="2060" y2="2308"/>
+<ellipse class="at" cx="2128" cy="2330" rx="58" ry="18"/><text x="2128" y="2334" text-anchor="middle">table_name</text>
+<line class="ln" x1="2062" y1="2328" x2="2060" y2="2324"/>
+<ellipse class="at" cx="2128" cy="2364" rx="54" ry="18"/><text x="2128" y="2368" text-anchor="middle">operation</text>
+<line class="ln" x1="2064" y1="2358" x2="2060" y2="2344"/>
+<ellipse class="at" cx="2128" cy="2398" rx="70" ry="18"/><text x="2128" y="2402" text-anchor="middle">changed_data</text>
+<line class="ln" x1="2062" y1="2390" x2="2060" y2="2376"/>
+
+
+
+<line class="ln" x1="1470" y1="736" x2="1720" y2="2560"/>
+<text class="ca" x="1577" y="1820">1</text>
+<polygon class="rd" points="1720,2560 1752,2580 1720,2600 1688,2580"/>
+<text x="1720" y="2584" text-anchor="middle" class="rb">CONFLICTS_WITH</text>
+<line class="ln" x1="1752" y1="2580" x2="1900" y2="2580"/>
+<text class="ca" x="1820" y="2572">N</text>
+<rect class="er" x="1900" y="2566" width="180" height="38"/>
+<text x="1990" y="2590" text-anchor="middle" class="eb">CONFLICT_LOGS</text>
+<ellipse class="at" cx="2148" cy="2556" rx="60" ry="18"/><text x="2148" y="2560" text-anchor="middle" class="pk">conflict_id</text>
+<line class="ln" x1="2090" y1="2558" x2="2080" y2="2568"/>
+<ellipse class="at" cx="2152" cy="2590" rx="66" ry="18"/><text x="2152" y="2594" text-anchor="middle">detected_at</text>
+<line class="ln" x1="2088" y1="2588" x2="2080" y2="2584"/>
+
+
+
+<line class="ln" x1="1360" y1="718" x2="1080" y2="2700"/>
+<text class="ca" x="1210" y="1800">1</text>
+<polygon class="rd" points="1080,2700 1048,2720 1080,2740 1112,2720"/>
+<text x="1080" y="2724" text-anchor="middle" class="rb">IS_AVAILABLE</text>
+<line class="ln" x1="1048" y1="2720" x2="880" y2="2720"/>
+<text class="ca" x="956" y="2712">N</text>
+<rect class="er" x="620" y="2706" width="260" height="38"/>
+<text x="750" y="2730" text-anchor="middle" class="eb">USER_AVAILABILITY</text>
+<ellipse class="at" cx="484" cy="2694" rx="70" ry="18"/><text x="484" y="2698" text-anchor="middle" class="pk">availability_id</text>
+<line class="ln" x1="552" y1="2696" x2="622" y2="2710"/>
+<ellipse class="at" cx="476" cy="2728" rx="62" ry="18"/><text x="476" y="2732" text-anchor="middle">day_of_week</text>
+<line class="ln" x1="538" y1="2726" x2="620" y2="2722"/>
+<ellipse class="at" cx="472" cy="2762" rx="64" ry="18"/><text x="472" y="2766" text-anchor="middle">is_available</text>
+<line class="ln" x1="536" y1="2756" x2="630" y2="2740"/>
+
+<line class="ln" x1="880" y1="2724" x2="1020" y2="2724"/>
+<text class="ca" x="932" y="2716">1</text>
+<polygon class="rd" points="1020,2724 1052,2744 1020,2764 988,2744"/>
+<text x="1020" y="2748" text-anchor="middle" class="rb">HAS_SLOT</text>
+<line class="ln" x1="1052" y1="2744" x2="1200" y2="2744"/>
+<text class="ca" x="1124" y="2736">N</text>
+<rect class="er" x="1200" y="2730" width="220" height="38"/>
+<text x="1310" y="2754" text-anchor="middle" class="eb">AVAILABILITY_SLOTS</text>
+<ellipse class="at" cx="1490" cy="2720" rx="44" ry="18"/><text x="1490" y="2724" text-anchor="middle" class="pk">slot_id</text>
+<line class="ln" x1="1448" y1="2722" x2="1420" y2="2732"/>
+<ellipse class="at" cx="1494" cy="2754" rx="54" ry="18"/><text x="1494" y="2758" text-anchor="middle">start_time</text>
+<line class="ln" x1="1442" y1="2750" x2="1420" y2="2746"/>
+<ellipse class="at" cx="1494" cy="2788" rx="52" ry="18"/><text x="1494" y="2792" text-anchor="middle">end_time</text>
+<line class="ln" x1="1444" y1="2781" x2="1420" y2="2760"/>
+
+
+<rect x="700" y="3460" width="1800" height="90" rx="14" fill="#e8f0fe" stroke="#1a3a6c" stroke-width="2"/>
+<text x="1600" y="3496" text-anchor="middle" font-size="24" font-weight="bold" fill="#1a3a6c">ER Diagram — Multi-User Calendar Management System</text>
+<text x="1600" y="3528" text-anchor="middle" font-size="16" fill="#555">MIT Manipal — Database Systems Lab (CSE 2241)</text>
+<text x="1600" y="3544" text-anchor="middle" font-size="14" fill="#777">Rectangles = Entities   |   Diamonds = Relationships   |   Ovals = Attributes   |   Underlined = Primary Key   |   1/N/M = Cardinality</text>
+
+</svg>
