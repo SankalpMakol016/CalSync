@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalSync — Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="auth-page">
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+
+        <div class="auth-logo">
+            <span class="logo-icon">📅</span>
+            <h1>CalSync</h1>
+            <p>Multi-User Calendar Management System</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="you@example.com" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Your password" required>
+            </div>
+
+            <div id="loginError" class="error-msg hidden"></div>
+
+            <button type="submit" class="btn-primary" id="loginBtn">
+                Sign In
+            </button>
+        </form>
+
+        <p class="auth-footer">
+            Database Systems Lab — MIT Manipal
+        </p>
+
+    </div>
+</div>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        const btn      = document.getElementById("loginBtn");
+        const errorDiv = document.getElementById("loginError");
+        const email    = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        btn.textContent = "Signing in...";
+        btn.disabled    = true;
+        errorDiv.classList.add("hidden");
+
+        try {
+            const res  = await fetch("/api/login", {
+                method:  "POST",
+                headers: { "Content-Type": "application/json" },
+                body:    JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                window.location.href = "/dashboard";
+            } else {
+                errorDiv.textContent = data.message;
+                errorDiv.classList.remove("hidden");
+                btn.textContent = "Sign In";
+                btn.disabled    = false;
+            }
+        } catch (err) {
+            errorDiv.textContent = "Could not connect to server. Is Flask running?";
+            errorDiv.classList.remove("hidden");
+            btn.textContent = "Sign In";
+            btn.disabled    = false;
+        }
+    });
+</script>
+
+</body>
+</html>
