@@ -1,5 +1,5 @@
 
-
+import bcrypt
 import sys
 from datetime import datetime
 
@@ -56,25 +56,36 @@ def logout():
 @app.route("/api/login", methods=["POST"])
 def api_login():
     data = request.get_json() or {}
-    email    = data.get("email")
+    email = data.get("email")
     password = data.get("password")
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
+
+    # Get user by email only
     cursor.execute(
-        "SELECT * FROM users WHERE email=%s AND password=%s",
-        (email, password)
+        "SELECT * FROM users WHERE email=%s",
+        (email,)
     )
+
     user = cursor.fetchone()
+
     cursor.close()
     db.close()
 
-    if user:
-        session["user_id"]   = user["user_id"]
+    if user and bcrypt.checkpw(
+        password.encode("utf-8"),
+        user["password"].encode("utf-8")
+    ):
+        session["user_id"] = user["user_id"]
         session["user_name"] = user["name"]
+
         return jsonify({"success": True})
-    else:
-        return jsonify({"success": False, "message": "Invalid credentials"})
+
+    return jsonify({
+        "success": False,
+        "message": "Invalid credentials"
+    })
 
 # ── GET EVENTS ────────────────────────────────────────────────
 # Returns events the user created PLUS events they accepted an invitation to

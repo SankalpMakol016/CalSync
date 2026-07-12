@@ -14,11 +14,11 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 -- users
 INSERT INTO `users` VALUES
-(1,'Sankalp','sankalp@gmail.com','pass123','2026-04-01 18:04:13'),
-(2,'Rahul','rahul@gmail.com','pass123','2026-04-01 18:04:13'),
-(3,'Amit','amit@gmail.com','pass123','2026-04-01 18:04:13'),
-(4,'NoEvent1','no1@gmail.com','pass123','2026-04-01 18:10:14'),
-(5,'NoEvent2','no2@gmail.com','pass123','2026-04-01 18:10:14');
+(1,'Sankalp','sankalp@gmail.com','$2b$12$lyeAUD6POOwYvvSZVxPp8OfCLNh6L5edIH50CafqyxQxOwUOeM4qy','2026-04-01 18:04:13'),
+(2,'Rahul','rahul@gmail.com','$2b$12$lyeAUD6POOwYvvSZVxPp8OfCLNh6L5edIH50CafqyxQxOwUOeM4qy','2026-04-01 18:04:13'),
+(3,'Amit','amit@gmail.com','$2b$12$lyeAUD6POOwYvvSZVxPp8OfCLNh6L5edIH50CafqyxQxOwUOeM4qy','2026-04-01 18:04:13'),
+(4,'NoEvent1','no1@gmail.com','$2b$12$lyeAUD6POOwYvvSZVxPp8OfCLNh6L5edIH50CafqyxQxOwUOeM4qy','2026-04-01 18:10:14'),
+(5,'NoEvent2','no2@gmail.com','$2b$12$lyeAUD6POOwYvvSZVxPp8OfCLNh6L5edIH50CafqyxQxOwUOeM4qy','2026-04-01 18:10:14');
 
 -- roles
 INSERT INTO `roles` VALUES (1,'admin'),(3,'guest'),(2,'user');
