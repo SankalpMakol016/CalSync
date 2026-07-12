@@ -1,0 +1,58 @@
+services:
+
+  mysql:
+    image: mysql:8.4
+
+    container_name: calcsync-mysql
+
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+    networks:
+      - calcsync-network
+
+  flask:
+    build: .
+
+    container_name: calcsync-app
+
+    restart: unless-stopped
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    env_file:
+      - .env
+
+    environment:
+      MYSQL_HOST: mysql
+
+    ports:
+      - "8000:8000"
+
+    networks:
+      - calcsync-network
+
+volumes:
+  mysql_data:
+
+networks:
+  calcsync-network:
