@@ -1,123 +1,144 @@
-<div align="center">
+# CalSync
 
-# 📅 CalSync
+A collaborative event scheduling platform built with Flask and MySQL. CalSync allows multiple users to create, manage, and share events while demonstrating advanced relational database concepts such as stored procedures, triggers, views, and normalized schema design.
 
-### A Multi-User Calendar Management System built with Flask & MySQL
-
-![Python](https://img.shields.io/badge/Python-3.13+-blue?style=for-the-badge&logo=python)
-![Flask](https://img.shields.io/badge/Flask-3.1-black?style=for-the-badge&logo=flask)
-![MySQL](https://img.shields.io/badge/MySQL-8.0-orange?style=for-the-badge&logo=mysql)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
-
-A database-driven collaborative calendar application that enables users to create, manage, and share events while demonstrating advanced relational database concepts including stored procedures, triggers, views, normalization, and transactional workflows.
-
-</div>
+<p align="left">
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white">
+  <img alt="Flask" src="https://img.shields.io/badge/Flask-Backend-000000?logo=flask&logoColor=white">
+  <img alt="MySQL" src="https://img.shields.io/badge/MySQL-Database-4479A1?logo=mysql&logoColor=white">
+  <img alt="Docker" src="https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker&logoColor=white">
+  <img alt="GitHub Actions" src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white">
+  <img alt="License" src="https://img.shields.io/badge/License-MIT-green">
+</p>
 
 ---
 
-# 📌 Features
+## Table of Contents
 
-- 🔐 User Authentication
-- 📅 Create & Delete Events
-- 👥 Multi-user Event Invitations
-- ✅ Accept / Decline Invitations
-- 📊 Dashboard Statistics
-- ⏰ Upcoming & Today's Event Tracking
-- 🗃️ Normalized Relational Database
-- ⚡ Stored Procedures
-- 🔄 Database Triggers
-- 👀 SQL Views
-- 📝 Logging & Exception Handling
-- 🔒 Environment Variable Configuration
-
----
-
-# 🖼️ Screenshots
-
-## Login Page
-
-> Add screenshot here
-
-```
-docs/screenshots/login.png
-```
+1. [Features](#features)
+2. [Architecture](#architecture)
+3. [Technology Stack](#technology-stack)
+4. [Project Structure](#project-structure)
+5. [Database Design](#database-design)
+6. [Screenshots](#screenshots)
+7. [Installation](#installation)
+8. [Database Setup](#database-setup)
+9. [Environment Variables](#environment-variables)
+10. [Running the Application](#running-the-application)
+11. [API Reference](#api-reference)
+12. [CI/CD](#cicd)
+13. [Deployment](#deployment)
+14. [Future Improvements](#future-improvements)
+15. [License](#license)
+16. [Author](#author)
 
 ---
 
-## Dashboard
+## Features
 
-> Add screenshot here
+**Authentication**
+- User registration
+- User login
+- Logout
+- Session management
+
+**Event Management**
+- Create events
+- Delete events
+- Dashboard statistics
+- Today's events
+- Upcoming events
+
+**Collaboration**
+- Invite users
+- Live email search
+- Accept invitations
+- Decline invitations
+- Participants panel
+
+**Database**
+- Stored procedures
+- Triggers
+- Views
+- Audit logging
+- Transaction handling
+- 3NF normalized database
+
+**DevOps**
+- Centralized error handling
+- Logging
+- Modular Flask architecture
+- Environment variables
+- Dockerized deployment
+- Gunicorn production server
+- GitHub Actions continuous integration
+
+---
+
+## Architecture
 
 ```
-docs/screenshots/dashboard.png
+Browser
+  │
+  │  HTTP
+  ▼
+Gunicorn
+  │
+  ▼
+Flask
+  │
+  ▼
+Business Logic
+  │
+  ▼
+MySQL
+  │
+  ├── Stored Procedures
+  ├── Triggers
+  └── Views
 ```
 
 ---
 
-## Invite User
+## Technology Stack
 
-> Add screenshot here
-
-```
-docs/screenshots/invite.png
-```
-
----
-
-# 🏗️ Project Architecture
-
-```
-                +----------------+
-                |   Web Browser  |
-                +--------+-------+
-                         |
-                     HTTP Requests
-                         |
-                +--------v-------+
-                |     Flask      |
-                |  Application   |
-                +--------+-------+
-                         |
-                Business Logic
-                         |
-                +--------v-------+
-                | MySQL Database |
-                +--------+-------+
-                         |
-     -----------------------------------------
-     | Stored Procedures | Triggers | Views |
-     -----------------------------------------
-```
+| Category       | Technologies                                                          |
+|----------------|------------------------------------------------------------------------|
+| Backend        | Python, Flask, Gunicorn                                                |
+| Frontend       | HTML, CSS, JavaScript                                                  |
+| Database       | MySQL, Stored Procedures, Triggers, Views, Transactions, 3NF Schema    |
+| Authentication | Session-based authentication, Bcrypt password hashing, Regex validation|
+| DevOps         | Docker, Docker Compose, GitHub Actions                                 |
 
 ---
 
-# 🗂️ Project Structure
+## Project Structure
 
 ```
-CalcSync
-│
+CalSync/
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 ├── assets/
 ├── config/
-│   └── config.py
-│
 ├── database/
-│   ├── schema.sql
-│   ├── seed.sql
-│   ├── procedures.sql
-│   ├── triggers.sql
-│   ├── views.sql
-│   └── database_design.md
-│
+│   ├── 01_schema.sql
+│   ├── 02_procedures.sql
+│   ├── 03_triggers.sql
+│   ├── 04_views.sql
+│   └── 05_seed.sql
 ├── docs/
-│   ├── architecture.png
-│   └── screenshots/
-│
 ├── exception/
 ├── logger/
+├── logs/
+├── routes/
 ├── static/
 ├── templates/
-│
+├── utils/
 ├── app.py
+├── db.py
+├── Dockerfile
+├── docker-compose.yml
 ├── requirements.txt
 ├── .env.example
 └── README.md
@@ -125,192 +146,177 @@ CalcSync
 
 ---
 
-# 🛠️ Tech Stack
+## Database Design
 
-## Backend
+The database is designed around a fully normalized relational schema and leverages core MySQL capabilities rather than relying solely on application-layer logic.
 
-- Python
-- Flask
-
-## Database
-
-- MySQL
-- Stored Procedures
-- Triggers
-- Views
-
-## Frontend
-
-- HTML
-- CSS
-- JavaScript
-
-## Tools
-
-- Git
-- GitHub
-- VS Code
-- MySQL Workbench
+- **Third Normal Form (3NF)** — Tables are structured to eliminate redundancy and maintain data integrity across users, events, invitations, and participants.
+- **Stored Procedures** — Encapsulate reusable data operations directly at the database layer.
+- **Triggers** — Automatically maintain derived state (e.g., participant records) in response to data changes.
+- **Views** — Provide simplified, reusable read models over the underlying normalized tables.
+- **Referential Integrity** — Foreign key constraints enforce valid relationships between users, events, invitations, and participants.
+- **Transactions** — Multi-step operations are wrapped in transactions to ensure atomicity and consistency.
+- **Audit Logging** — Key state-changing operations are recorded for traceability.
 
 ---
 
-# 🗄️ Database Design
+## Screenshots
 
-The database follows **Third Normal Form (3NF)** and consists of **30 interconnected tables** supporting collaborative event management.
+| Login | Registration |
+|-------|--------------|
+| _placeholder_ | _placeholder_ |
 
-Key concepts implemented:
+| Dashboard | Invitation Search |
+|-----------|--------------------|
+| _placeholder_ | _placeholder_ |
 
-- Primary Keys
-- Foreign Keys
-- Composite Relationships
-- Referential Integrity
-- Views
-- Triggers
-- Stored Procedures
-- Transaction Handling
+| Participants Panel |
+|---------------------|
+| _placeholder_ |
 
 ---
 
-# ⚙️ Installation
+## Installation
 
-Clone the repository
+### Method 1: Docker (Recommended)
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/CalcSync.git
-
-cd CalcSync
+docker compose up --build
 ```
 
-Create virtual environment
+This builds and starts the Flask application alongside its MySQL database using the provided `docker-compose.yml`.
+
+### Method 2: Local Development
 
 ```bash
+# Clone the repository
+git clone https://github.com/SankalpMakol016/CalSync.git
+cd CalSync
+
+# Create and activate a virtual environment
 python -m venv venv
-```
+source venv/bin/activate      # On Windows: venv\Scripts\activate
 
-Activate
-
-### Windows
-
-```bash
-venv\Scripts\activate
-```
-
-### macOS/Linux
-
-```bash
-source venv/bin/activate
-```
-
-Install dependencies
-
-```bash
+# Install dependencies
 pip install -r requirements.txt
+
+# Import the SQL files (see Database Setup)
+# Run the application
+python app.py
 ```
 
 ---
 
-# 🗄️ Database Setup
+## Database Setup
 
-Import the SQL files in the following order:
+Run the SQL files in the `database/` directory in the following order:
 
-```
-schema.sql
-↓
-procedures.sql
-↓
-triggers.sql
-↓
-views.sql
-↓
-seed.sql
-```
+1. `01_schema.sql`
+2. `02_procedures.sql`
+3. `03_triggers.sql`
+4. `04_views.sql`
+5. `05_seed.sql`
 
-Create a `.env` file using `.env.example`.
+This order is required because procedures, triggers, and views depend on tables already existing in the schema, and seed data is inserted last to avoid unintended trigger side effects during setup.
 
 ---
 
-# ▶️ Running the Project
+## Environment Variables
+
+Create a `.env` file based on `.env.example`:
+
+```env
+SECRET_KEY=
+FLASK_ENV=
+FLASK_DEBUG=
+MYSQL_HOST=
+MYSQL_PORT=
+MYSQL_USER=
+MYSQL_PASSWORD=
+MYSQL_DATABASE=
+```
+
+---
+
+## Running the Application
+
+### Local
 
 ```bash
 python app.py
 ```
 
-Open
+### Docker
 
-```
-http://127.0.0.1:8000
-```
-
----
-
-# 🔑 Environment Variables
-
-Create a `.env` file.
-
-```env
-SECRET_KEY=your_secret_key
-
-MYSQL_HOST=localhost
-MYSQL_PORT=3306
-MYSQL_USER=root
-MYSQL_PASSWORD=your_password
-MYSQL_DATABASE=CalcSync
+```bash
+docker compose up --build
 ```
 
 ---
 
-# 📡 API Endpoints
+## API Reference
 
-| Method | Endpoint | Description |
-|----------|----------------------------|----------------------------|
-| POST | /api/login | User Login |
-| GET | /api/events | Fetch Events |
-| POST | /api/events | Create Event |
-| DELETE | /api/events/<id> | Delete Event |
-| GET | /api/users | List Users |
-| POST | /api/invite | Send Invitation |
-| GET | /api/invitations | View Invitations |
-| POST | /api/invitations/<id> | Accept/Decline Invitation |
-| GET | /api/stats | Dashboard Statistics |
-
----
-
-# 🚀 Future Improvements
-
-- Password Hashing (bcrypt)
-- Event Editing
-- Recurring Events
-- Calendar Views
-- Email Notifications
-- Docker Deployment
-- Unit Testing
-- REST API Documentation
+| Method | Endpoint                          | Description                                  |
+|--------|------------------------------------|-----------------------------------------------|
+| POST   | `/api/register`                   | Register a new user                            |
+| POST   | `/api/login`                      | Authenticate a user and start a session        |
+| GET    | `/api/events`                     | Retrieve events for the logged-in user         |
+| POST   | `/api/events`                     | Create a new event                             |
+| DELETE | `/api/events/<id>`                | Delete an event owned by the logged-in user    |
+| GET    | `/api/users/search`               | Live search users by email                     |
+| POST   | `/api/invite`                     | Invite a user to an event                      |
+| GET    | `/api/invitations`                | Retrieve pending invitations for the user       |
+| POST   | `/api/invitations/<id>`           | Accept or decline an invitation                 |
+| GET    | `/api/events/<id>/participants`   | Retrieve participants for an event (owner only)|
+| GET    | `/api/stats`                      | Retrieve dashboard statistics                   |
 
 ---
 
-# 👨‍💻 Author
+## CI/CD
+
+GitHub Actions automatically validates every push by installing project dependencies and building the Docker image, ensuring the application remains in a buildable and deployable state at all times.
+
+---
+
+## Deployment
+
+CalSync is production-ready and designed to run behind Gunicorn as the WSGI server, packaged with Docker, and orchestrated via Docker Compose for consistent deployment across environments.
+
+---
+
+## Future Improvements
+
+- Event editing
+- Recurring events
+- Calendar month view
+- Calendar week view
+- Email notifications
+- Role-based access control
+- Unit testing
+- Integration testing
+- REST API documentation
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## Author
 
 **Sankalp Makol**
-
-B.Tech Data Science  
+B.Tech Data Science & Engineering
 Manipal Institute of Technology
 
-GitHub:
-
-```
-https://github.com/SankalpMakol016
-```
+- GitHub: [https://github.com/SankalpMakol016](https://github.com/SankalpMakol016)
+- LinkedIn: _placeholder_
 
 ---
 
-# 📄 License
-
-This project is licensed under the MIT License.
-
----
-
-<div align="center">
-
-### ⭐ If you found this project interesting, consider giving it a star!
-
-</div>
+<p align="center">
+  If you find this project useful, consider giving it a star.
+  <br><br>
+  <strong>⭐ Star this repository</strong>
+</p>
