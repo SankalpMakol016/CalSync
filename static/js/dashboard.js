@@ -84,6 +84,14 @@ async function loadEvents() {
                 <button class="btn-delete" onclick="deleteEvent(${ev.event_id})">🗑</button>
             ` : "";
 
+            // Only the owner gets the expandable participant list
+            const participantsSection = isOwner ? `
+                <div class="participants-toggle" onclick="toggleParticipants(${ev.event_id})">
+                    <span id="participantsLabel-${ev.event_id}">Participants ▾</span>
+                </div>
+                <div class="participants-panel hidden" id="participantsPanel-${ev.event_id}"></div>
+            ` : "";
+
             return `
             <div class="event-card ${isPast ? "past" : ""}">
                 <div class="event-dot ${isPast ? "dot-past" : "dot-upcoming"}"></div>
@@ -95,6 +103,7 @@ async function loadEvents() {
                     </div>
                 </div>
                 ${actionBtns}
+                ${participantsSection}
             </div>`;
         }).join("");
 
@@ -112,6 +121,105 @@ async function deleteEvent(id) {
         if (data.success) { loadEvents(); loadStats(); }
         else alert(data.message);
     } catch (e) { alert("Could not delete event."); }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Participants
+// ═══════════════════════════════════════════════════════════════════════════
+
+// eventId -> participants data, so we only ever fetch each event once per page load
+const participantsCache = {};
+
+async function toggleParticipants(eventId) {
+    const panel = document.getElementById(`participantsPanel-${eventId}`);
+
+    // Already open -> just collapse it, no fetch needed
+    if (!panel.classList.contains("hidden")) {
+        panel.classList.add("hidden");
+        setParticipantsLabel(eventId, "▾");
+        return;
+    }
+
+    panel.classList.remove("hidden");
+    setParticipantsLabel(eventId, "▴");
+
+    // Reuse cached data instead of calling the backend again
+    if (participantsCache[eventId]) {
+        renderParticipantsPanel(eventId, participantsCache[eventId]);
+        return;
+    }
+
+    panel.innerHTML = `<div class="loading">Loading participants...</div>`;
+
+    try {
+        const res  = await fetch(`/api/events/${eventId}/participants`);
+        const data = await res.json();
+
+        if (!data.success) {
+            panel.innerHTML = `<div class="empty-state">Could not load participants.</div>`;
+            return;
+        }
+
+        participantsCache[eventId] = data;
+        renderParticipantsPanel(eventId, data);
+        setParticipantsLabel(eventId, "▴"); // now that data is in, show the count too
+    } catch (e) {
+        panel.innerHTML = `<div class="empty-state">Server error loading participants.</div>`;
+    }
+}
+
+// Updates the toggle label text, adding the participant count once it's known
+// (owner + accepted + pending + declined), pulled from the cache — no API call.
+function setParticipantsLabel(eventId, arrow) {
+    const label = document.getElementById(`participantsLabel-${eventId}`);
+    const data  = participantsCache[eventId];
+
+    const count = data ? 1 + data.accepted.length + data.pending.length + data.declined.length : null;
+    const countText = count !== null ? ` (${count})` : "";
+
+    label.textContent = `Participants${countText} ${arrow}`;
+}
+
+function renderParticipantsPanel(eventId, data) {
+    const panel = document.getElementById(`participantsPanel-${eventId}`);
+
+    let html = `
+        <div class="participant-section-title">Owner</div>
+        <div class="participant-row">
+            👤
+            <div class="participant-info">
+                <div class="participant-name">${escapeHtml(data.owner.name)}</div>
+                <div class="participant-email">${escapeHtml(data.owner.email)}</div>
+            </div>
+        </div>`;
+
+    // Skip a category entirely if it has no one in it
+    if (data.accepted.length > 0) {
+        html += `<div class="participant-section-title">Accepted</div>`;
+        html += data.accepted.map(u => participantRow(u, "dot-green")).join("");
+    }
+    if (data.pending.length > 0) {
+        html += `<div class="participant-section-title">Pending</div>`;
+        html += data.pending.map(u => participantRow(u, "dot-yellow")).join("");
+    }
+    if (data.declined.length > 0) {
+        html += `<div class="participant-section-title">Declined</div>`;
+        html += data.declined.map(u => participantRow(u, "dot-red")).join("");
+    }
+
+    panel.innerHTML = html;
+}
+
+function participantRow(user, dotClass) {
+    return `
+        <div class="participant-row">
+            <span class="participant-dot ${dotClass}"></span>
+            <div class="participant-info">
+                <div class="participant-name">${escapeHtml(user.name)}</div>
+                <div class="participant-email">${escapeHtml(user.email)}</div>
+            </div>
+        </div>`;
 }
 
 

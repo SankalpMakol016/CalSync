@@ -218,3 +218,80 @@ def stats():
     cursor.close()
     db.close()
     return jsonify({"success": True, "total": total, "upcoming": upcoming, "today": today})
+
+
+# ── GET EVENT PARTICIPANTS (owner only, read-only) ──────────────
+@events_bp.route("/api/events/<int:event_id>/participants")
+@login_required
+def get_participants(event_id):
+    user_id = session["user_id"]
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    # Confirm the event exists and fetch the owner's info in one go
+    cursor.execute("""
+        SELECT e.created_by, u.name, u.email
+        FROM events e
+        JOIN users u ON u.user_id = e.created_by
+        WHERE e.event_id = %s
+    """, (event_id,))
+    event = cursor.fetchone()
+
+    if not event:
+        cursor.close()
+        db.close()
+        return jsonify({"success": False, "message": "Event not found."}), 404
+
+    # Only the owner is allowed to see the participant list
+    if event["created_by"] != user_id:
+        cursor.close()
+        db.close()
+        return jsonify({
+            "success": False,
+            "message": "Only the event owner can view participants."
+        }), 403
+
+    owner = {"name": event["name"], "email": event["email"]}
+
+    # One query, tagged with a status column, covers all three buckets:
+    # accepted/declined live in event_participants (status_id set by the
+    # after_invitation_response trigger), pending is an invitation with
+    # no response row yet.
+    cursor.execute("""
+        SELECT u.name, u.email, 'accepted' AS status
+        FROM event_participants ep
+        JOIN users u ON u.user_id = ep.user_id
+        WHERE ep.event_id = %s AND ep.status_id = 1
+
+        UNION ALL
+
+        SELECT u.name, u.email, 'declined' AS status
+        FROM event_participants ep
+        JOIN users u ON u.user_id = ep.user_id
+        WHERE ep.event_id = %s AND ep.status_id = 2
+
+        UNION ALL
+
+        SELECT u.name, u.email, 'pending' AS status
+        FROM event_invitations ei
+        JOIN users u ON u.user_id = ei.receiver_id
+        WHERE ei.event_id = %s
+        AND ei.invitation_id NOT IN (SELECT invitation_id FROM invitation_responses)
+    """, (event_id, event_id, event_id))
+    rows = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    # Split the tagged rows into their three buckets
+    accepted = [{"name": r["name"], "email": r["email"]} for r in rows if r["status"] == "accepted"]
+    pending  = [{"name": r["name"], "email": r["email"]} for r in rows if r["status"] == "pending"]
+    declined = [{"name": r["name"], "email": r["email"]} for r in rows if r["status"] == "declined"]
+
+    return jsonify({
+        "success": True,
+        "owner": owner,
+        "accepted": accepted,
+        "pending": pending,
+        "declined": declined
+    })
