@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request, session
 
 from db import get_db
 from logger.logger import logger
-from utils.auth import login_required, login_required_401
+from utils.auth import login_required, login_required_401,not_logged_in
 from utils.serializers import serialize_datetimes
 
 invitations_bp = Blueprint("invitations", __name__)
@@ -292,3 +292,45 @@ def respond_invitation(inv_id):
     finally:
         cursor.close()
         db.close()
+
+@invitations_bp.route("/api/users/search")
+def search_users():
+    if not_logged_in():
+        return jsonify({"success": False}), 401
+
+    query = (request.args.get("q") or "").strip().lower()
+
+    if len(query) < 2:
+        return jsonify({
+            "success": True,
+            "users": []
+        })
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute(
+        """
+        SELECT user_id, name, email
+        FROM users
+        WHERE
+            user_id <> %s
+            AND LOWER(email) LIKE %s
+        ORDER BY email
+        LIMIT 10
+        """,
+        (
+            session["user_id"],
+            f"%{query}%"
+        )
+    )
+
+    users = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    return jsonify({
+        "success": True,
+        "users": users
+    })

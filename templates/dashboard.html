@@ -70,7 +70,7 @@
         }
     </style>
 </head>
-<body class="dashboard-page">
+<body class="dashboard-page" data-user-id="{{ session['user_id'] }}">
 
 <!-- ── Top Navbar ──────────────────────────────────────────────────────── -->
 <nav class="navbar">
@@ -207,10 +207,20 @@
         </div>
         <div style="padding:24px;">
             <div class="form-group">
-                <label>Select User to Invite</label>
-                <select id="inviteUserSelect" style="width:100%;padding:11px 14px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:14px;">
-                    <option value="">Loading users...</option>
-                </select>
+                
+                <label for="inviteSearch">
+                    Search User by Email
+                </label>
+                <input
+                    type="email"
+                    id="inviteSearch"
+                    placeholder="Enter email..."
+                    autocomplete="off"
+                >
+                <div
+                    id="searchResults"
+                    class="search-results hidden">
+                </div>
             </div>
             <div id="inviteError"   class="error-msg hidden"></div>
             <div id="inviteSuccess" class="success-msg hidden"></div>
@@ -222,322 +232,7 @@
     </div>
 </div>
 
-<script>
-// ── Current logged-in user ID (injected by Flask/Jinja2) ──────────────────────
-const currentUserId = {{ session['user_id'] }};
-
-// ── Date display ──────────────────────────────────────────────────────────────
-const now    = new Date();
-const days   = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-const months = ["January","February","March","April","May","June",
-                "July","August","September","October","November","December"];
-
-document.getElementById("todayDay").textContent   = days[now.getDay()];
-document.getElementById("todayDate").textContent  = now.getDate();
-document.getElementById("todayMonth").textContent = months[now.getMonth()] + " " + now.getFullYear();
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-function escapeHtml(text) {
-    const div = document.createElement("div");
-    div.appendChild(document.createTextNode(text));
-    return div.innerHTML;
-}
-const formatDate = d => d.toLocaleDateString("en-IN", { day:"numeric", month:"short", year:"numeric" });
-const formatTime = d => d.toLocaleTimeString("en-GB", { hour:"2-digit", minute:"2-digit" });
-
-// ── Load stats ────────────────────────────────────────────────────────────────
-async function loadStats() {
-    try {
-        const res  = await fetch("/api/stats");
-        const data = await res.json();
-        if (data.success) {
-            document.getElementById("statTotal").textContent    = data.total;
-            document.getElementById("statUpcoming").textContent = data.upcoming;
-            document.getElementById("statToday").textContent    = data.today;
-        }
-    } catch (e) { console.error("Stats error:", e); }
-}
-
-// ── Load events ───────────────────────────────────────────────────────────────
-async function loadEvents() {
-    const container = document.getElementById("eventsList");
-    try {
-        const res  = await fetch("/api/events");
-        const data = await res.json();
-
-        if (!data.success) {
-            container.innerHTML = `<div class="empty-state">Could not load events.</div>`;
-            return;
-        }
-        if (data.events.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <span>📭</span>
-                    <p>No events yet. Create your first one!</p>
-                </div>`;
-            return;
-        }
-
-        container.innerHTML = data.events.map(ev => {
-            const start   = new Date(ev.start_time);
-            const end     = new Date(ev.end_time);
-            const isPast  = end < new Date();
-            const isOwner = ev.created_by == currentUserId;
-
-            // Show "(invited)" tag on events the user joined but didn't create
-            const tag = !isOwner ? `<span class="event-tag">(invited)</span>` : "";
-
-            // Only show Invite + Delete buttons if the user owns the event
-            const actionBtns = isOwner ? `
-                <button class="btn-invite" onclick="openInviteModal(${ev.event_id})">✉ Invite</button>
-                <button class="btn-delete" onclick="deleteEvent(${ev.event_id})">🗑</button>
-            ` : "";
-
-            return `
-            <div class="event-card ${isPast ? "past" : ""}">
-                <div class="event-dot ${isPast ? "dot-past" : "dot-upcoming"}"></div>
-                <div class="event-info">
-                    <div class="event-title">${escapeHtml(ev.title)}${tag}</div>
-                    <div class="event-time">
-                        📅 ${formatDate(start)} &nbsp;
-                        🕐 ${formatTime(start)} → ${formatTime(end)}
-                    </div>
-                </div>
-                ${actionBtns}
-            </div>`;
-        }).join("");
-
-    } catch (e) {
-        container.innerHTML = `<div class="empty-state">Server error loading events.</div>`;
-    }
-}
-
-// ── Delete event ──────────────────────────────────────────────────────────────
-async function deleteEvent(id) {
-    if (!confirm("Delete this event?")) return;
-    try {
-        const res  = await fetch(`/api/events/${id}`, { method: "DELETE" });
-        const data = await res.json();
-        if (data.success) { loadEvents(); loadStats(); }
-        else alert(data.message);
-    } catch (e) { alert("Could not delete event."); }
-}
-
-// ── Create event modal ────────────────────────────────────────────────────────
-function openModal() {
-    document.getElementById("eventModal").classList.remove("hidden");
-    document.getElementById("createError").classList.add("hidden");
-    document.getElementById("createSuccess").classList.add("hidden");
-    document.getElementById("createEventForm").reset();
-}
-function closeModal() {
-    document.getElementById("eventModal").classList.add("hidden");
-}
-document.getElementById("eventModal").addEventListener("click", function(e) {
-    if (e.target === this) closeModal();
-});
-
-// ── Populate HH / MM selects (runs once on page load) ────────────────────────
-(function() {
-    ["eventStartHH","eventEndHH"].forEach(id => {
-        const sel = document.getElementById(id);
-        for (let h = 0; h < 24; h++) {
-            const opt = document.createElement("option");
-            opt.value = opt.textContent = String(h).padStart(2,"0");
-            sel.appendChild(opt);
-        }
-        sel.value = "08";
-    });
-    ["eventStartMM","eventEndMM"].forEach(id => {
-        const sel = document.getElementById(id);
-        ["00","15","30","45"].forEach(m => {
-            const opt = document.createElement("option");
-            opt.value = opt.textContent = m;
-            sel.appendChild(opt);
-        });
-    });
-})();
-
-// ── Submit new event ──────────────────────────────────────────────────────────
-document.getElementById("createEventForm").addEventListener("submit", async function(e) {
-    e.preventDefault();
-    const btn        = document.getElementById("createBtn");
-    const errorDiv   = document.getElementById("createError");
-    const successDiv = document.getElementById("createSuccess");
-
-    const title     = document.getElementById("eventTitle").value.trim();
-    const startDate = document.getElementById("eventStartDate").value;
-    const startHH   = document.getElementById("eventStartHH").value;
-    const startMM   = document.getElementById("eventStartMM").value;
-    const endDate   = document.getElementById("eventEndDate").value;
-    const endHH     = document.getElementById("eventEndHH").value;
-    const endMM     = document.getElementById("eventEndMM").value;
-
-    if (!startDate || !endDate) {
-        errorDiv.textContent = "❌ Please fill in both dates.";
-        errorDiv.classList.remove("hidden");
-        return;
-    }
-
-    const start = `${startDate}T${startHH}:${startMM}`;
-    const end   = `${endDate}T${endHH}:${endMM}`;
-
-    btn.textContent = "Creating...";
-    btn.disabled    = true;
-    errorDiv.classList.add("hidden");
-    successDiv.classList.add("hidden");
-
-    try {
-        const res  = await fetch("/api/events", {
-            method:  "POST",
-            headers: {"Content-Type":"application/json"},
-            body:    JSON.stringify({ title, start, end })
-        });
-        const data = await res.json();
-        if (data.success) {
-            successDiv.textContent = "✅ " + data.message;
-            successDiv.classList.remove("hidden");
-            loadEvents(); loadStats();
-            setTimeout(closeModal, 1500);
-        } else {
-            errorDiv.textContent = "❌ " + data.message;
-            errorDiv.classList.remove("hidden");
-        }
-    } catch (err) {
-        errorDiv.textContent = "❌ Could not connect to server.";
-        errorDiv.classList.remove("hidden");
-    }
-    btn.textContent = "Create Event";
-    btn.disabled    = false;
-});
-
-// ── Invite modal ──────────────────────────────────────────────────────────────
-let currentInviteEventId = null;
-
-async function openInviteModal(eventId) {
-    currentInviteEventId = eventId;
-    document.getElementById("inviteModal").classList.remove("hidden");
-    document.getElementById("inviteError").classList.add("hidden");
-    document.getElementById("inviteSuccess").classList.add("hidden");
-
-    const select = document.getElementById("inviteUserSelect");
-    select.innerHTML = '<option value="">Loading...</option>';
-    try {
-        const res  = await fetch("/api/users");
-        const data = await res.json();
-        if (data.success && data.users.length > 0) {
-            select.innerHTML = data.users.map(u =>
-                `<option value="${u.user_id}">${escapeHtml(u.name)} (${escapeHtml(u.email)})</option>`
-            ).join("");
-        } else {
-            select.innerHTML = '<option value="">No other users found</option>';
-        }
-    } catch(e) {
-        select.innerHTML = '<option value="">Failed to load users</option>';
-    }
-}
-
-function closeInviteModal() {
-    document.getElementById("inviteModal").classList.add("hidden");
-}
-document.getElementById("inviteModal").addEventListener("click", function(e) {
-    if (e.target === this) closeInviteModal();
-});
-
-async function sendInvite() {
-    const receiver_id = document.getElementById("inviteUserSelect").value;
-    const errDiv      = document.getElementById("inviteError");
-    const okDiv       = document.getElementById("inviteSuccess");
-
-    if (!receiver_id) {
-        errDiv.textContent = "❌ Please select a user.";
-        errDiv.classList.remove("hidden");
-        return;
-    }
-    errDiv.classList.add("hidden");
-    okDiv.classList.add("hidden");
-
-    try {
-        const res  = await fetch("/api/invite", {
-            method:  "POST",
-            headers: {"Content-Type":"application/json"},
-            body:    JSON.stringify({ event_id: currentInviteEventId, receiver_id })
-        });
-        const data = await res.json();
-        if (data.success) {
-            okDiv.textContent = "✅ " + data.message;
-            okDiv.classList.remove("hidden");
-            setTimeout(closeInviteModal, 1500);
-        } else {
-            errDiv.textContent = "❌ " + data.message;
-            errDiv.classList.remove("hidden");
-        }
-    } catch(e) {
-        errDiv.textContent = "❌ Could not connect.";
-        errDiv.classList.remove("hidden");
-    }
-}
-
-// ── Load pending invitations ──────────────────────────────────────────────────
-async function loadInvitations() {
-    try {
-        const res   = await fetch("/api/invitations");
-        const data  = await res.json();
-        const panel = document.getElementById("invitationsPanel");
-        const list  = document.getElementById("invitationsList");
-        const badge = document.getElementById("inviteBadge");
-
-        if (!data.success || data.invitations.length === 0) {
-            panel.style.display = "none";
-            return;
-        }
-
-        panel.style.display = "block";
-        badge.textContent   = data.invitations.length;
-
-        list.innerHTML = data.invitations.map(inv => {
-            const start = new Date(inv.start_time);
-            return `
-            <div class="event-card">
-                <div class="event-dot dot-upcoming"></div>
-                <div class="event-info">
-                    <div class="event-title">${escapeHtml(inv.event_title)}</div>
-                    <div class="event-time">
-                        From: <strong>${escapeHtml(inv.sender_name)}</strong>
-                        &nbsp;📅 ${formatDate(start)}
-                        &nbsp;🕐 ${formatTime(start)}
-                    </div>
-                </div>
-                <button class="btn-accept"  onclick="respondInvite(${inv.invitation_id}, 'accept')">✓ Accept</button>
-                <button class="btn-decline" onclick="respondInvite(${inv.invitation_id}, 'decline')">✗ Decline</button>
-            </div>`;
-        }).join("");
-
-    } catch(e) { console.error("Invitations error:", e); }
-}
-
-async function respondInvite(invId, action) {
-    try {
-        const res  = await fetch(`/api/invitations/${invId}`, {
-            method:  "POST",
-            headers: {"Content-Type":"application/json"},
-            body:    JSON.stringify({ action })
-        });
-        const data = await res.json();
-        if (data.success) {
-            loadInvitations();
-            if (action === "accept") { loadEvents(); loadStats(); }
-        } else {
-            alert(data.message);
-        }
-    } catch(e) { alert("Could not respond to invitation."); }
-}
-
-// ── Init ──────────────────────────────────────────────────────────────────────
-loadStats();
-loadEvents();
-loadInvitations();
-</script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 
 </body>
 </html>
