@@ -585,15 +585,5 @@ body {
    Keep Authentication Card Stable
 =========================================================== */
 
-.auth-card {
-    min-height: 650px;
-}
 
-#loginContainer,
-#registerContainer {
-    width: 100%;
-}
-#loginContainer,
-#registerContainer {
-    transition: opacity 0.25s ease;
-}
+
