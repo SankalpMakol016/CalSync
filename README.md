@@ -1,15 +1,26 @@
 # CalSync
 
-A collaborative event scheduling platform built with Flask and MySQL. CalSync allows multiple users to create, manage, and share events while demonstrating advanced relational database concepts such as stored procedures, triggers, views, and normalized schema design.
+A collaborative event scheduling platform built with Flask and MySQL. CalSync allows multiple users to create, manage, and share events while demonstrating advanced relational database concepts such as stored procedures, triggers, views, and normalized schema design. The application is fully deployed and publicly accessible.
 
 <p align="left">
   <img alt="Python" src="https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white">
   <img alt="Flask" src="https://img.shields.io/badge/Flask-Backend-000000?logo=flask&logoColor=white">
+  <img alt="SQLAlchemy" src="https://img.shields.io/badge/SQLAlchemy-ORM-CA1E1E?logo=python&logoColor=white">
   <img alt="MySQL" src="https://img.shields.io/badge/MySQL-Database-4479A1?logo=mysql&logoColor=white">
   <img alt="Docker" src="https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker&logoColor=white">
+  <img alt="Render" src="https://img.shields.io/badge/Render-Hosting-46E3B7?logo=render&logoColor=white">
+  <img alt="Railway" src="https://img.shields.io/badge/Railway-MySQL%20Hosting-0B0D0E?logo=railway&logoColor=white">
   <img alt="GitHub Actions" src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white">
   <img alt="License" src="https://img.shields.io/badge/License-MIT-green">
 </p>
+
+## Live Demo
+
+The application is deployed and publicly accessible at:
+
+**[https://calsync-dn23.onrender.com/](https://calsync-dn23.onrender.com/)**
+
+The production instance runs on Render with a MySQL database hosted on Railway.
 
 ---
 
@@ -37,41 +48,36 @@ A collaborative event scheduling platform built with Flask and MySQL. CalSync al
 ## Features
 
 **Authentication**
-- User registration
-- User login
-- Logout
-- Session management
+- Secure user registration with input validation
+- Session-managed login powered by Flask-Login
+- Logout with full session invalidation
 
 **Event Management**
-- Create events
-- Delete events
-- Dashboard statistics
-- Today's events
-- Upcoming events
+- Create and delete events
+- Dashboard with real-time statistics
+- Dedicated views for today's and upcoming events
 
 **Collaboration**
-- Invite users
-- Live email search
-- Accept invitations
-- Decline invitations
-- Participants panel
+- Invite other users to events
+- Live email search while composing invitations
+- Accept or decline invitations
+- Participants panel for tracking attendance per event
 
 **Database**
-- Stored procedures
-- Triggers
-- Views
-- Audit logging
-- Transaction handling
-- 3NF normalized database
+- Stored procedures for core data operations
+- Triggers for automated state consistency
+- Views for simplified read access
+- Audit logging of key state changes
+- Transaction-wrapped multi-step operations
+- Normalized (3NF) relational schema
 
 **DevOps**
-- Centralized error handling
-- Logging
-- Modular Flask architecture
-- Environment variables
-- Dockerized deployment
-- Gunicorn production server
-- GitHub Actions continuous integration
+- Centralized error handling and structured logging
+- Modular Flask application architecture
+- Environment-based configuration
+- Dockerized build and deployment
+- Gunicorn as the production WSGI server
+- Automated validation via GitHub Actions
 
 ---
 
@@ -80,7 +86,10 @@ A collaborative event scheduling platform built with Flask and MySQL. CalSync al
 ```
 Browser
   │
-  │  HTTP
+  │  HTTPS
+  ▼
+Render (Hosting)
+  │
   ▼
 Gunicorn
   │
@@ -88,10 +97,10 @@ Gunicorn
 Flask
   │
   ▼
-Business Logic
+Business Logic (SQLAlchemy)
   │
   ▼
-MySQL
+Railway (Managed MySQL)
   │
   ├── Stored Procedures
   ├── Triggers
@@ -102,13 +111,13 @@ MySQL
 
 ## Technology Stack
 
-| Category       | Technologies                                                          |
-|----------------|------------------------------------------------------------------------|
-| Backend        | Python, Flask, Gunicorn                                                |
-| Frontend       | HTML, CSS, JavaScript                                                  |
-| Database       | MySQL, Stored Procedures, Triggers, Views, Transactions, 3NF Schema    |
-| Authentication | Session-based authentication, Bcrypt password hashing, Regex validation|
-| DevOps         | Docker, Docker Compose, GitHub Actions                                 |
+| Category              | Technologies                                                              |
+|------------------------|----------------------------------------------------------------------------|
+| Backend                | Python, Flask, Flask-Login, SQLAlchemy, Gunicorn                          |
+| Frontend               | HTML, CSS, JavaScript, Jinja2                                              |
+| Database               | MySQL, Stored Procedures, Triggers, Views, Transactions, 3NF Schema        |
+| Hosting & Infrastructure| Docker, Render (Application Hosting), Railway (Managed MySQL)             |
+| CI/CD                  | GitHub Actions                                                             |
 
 ---
 
@@ -157,6 +166,7 @@ The database is designed around a fully normalized relational schema and leverag
 - **Referential Integrity** — Foreign key constraints enforce valid relationships between users, events, invitations, and participants.
 - **Transactions** — Multi-step operations are wrapped in transactions to ensure atomicity and consistency.
 - **Audit Logging** — Key state-changing operations are recorded for traceability.
+- **SQLAlchemy** — Used as the application's data access layer for executing queries, stored procedures, and managing connections to the MySQL database.
 
 ---
 
@@ -178,13 +188,15 @@ The database is designed around a fully normalized relational schema and leverag
 
 ## Installation
 
+The application is live at [https://calsync-dn23.onrender.com/](https://calsync-dn23.onrender.com/). To run it locally, use one of the methods below.
+
 ### Method 1: Docker (Recommended)
 
 ```bash
 docker compose up --build
 ```
 
-This builds and starts the Flask application alongside its MySQL database using the provided `docker-compose.yml`.
+This builds and starts the Flask application alongside a MySQL database using the provided `docker-compose.yml`.
 
 ### Method 2: Local Development
 
@@ -236,6 +248,8 @@ MYSQL_PASSWORD=
 MYSQL_DATABASE=
 ```
 
+In production, these values point to the Railway-hosted MySQL instance and are configured as environment variables on Render rather than committed to the repository.
+
 ---
 
 ## Running the Application
@@ -251,6 +265,10 @@ python app.py
 ```bash
 docker compose up --build
 ```
+
+### Production
+
+The live instance runs via Gunicorn inside a Docker container, hosted on Render, connected to a MySQL database hosted on Railway.
 
 ---
 
@@ -280,7 +298,19 @@ GitHub Actions automatically validates every push by installing project dependen
 
 ## Deployment
 
-CalSync is production-ready and designed to run behind Gunicorn as the WSGI server, packaged with Docker, and orchestrated via Docker Compose for consistent deployment across environments.
+CalSync is deployed as a containerized application using the following components:
+
+- **Docker** — Packages the application and its dependencies into a portable, reproducible image.
+- **Render** — Hosts the containerized Flask application and serves the live instance.
+- **Railway** — Hosts the production MySQL database, including all stored procedures, triggers, and views.
+- **Gunicorn** — Serves the Flask application as the production WSGI server inside the container.
+
+### Production Deployment
+
+- The application is packaged as a Docker image and deployed to Render.
+- The production MySQL database is hosted on Railway and accessed over a secure connection.
+- Gunicorn runs as the WSGI server inside the container, handling production traffic.
+- All sensitive configuration (database credentials, secret keys) is supplied via environment variables rather than hardcoded values, keeping the deployment secure and environment-agnostic.
 
 ---
 
@@ -288,13 +318,11 @@ CalSync is production-ready and designed to run behind Gunicorn as the WSGI serv
 
 - Event editing
 - Recurring events
-- Calendar month view
-- Calendar week view
+- Calendar month and week views
 - Email notifications
 - Role-based access control
-- Unit testing
-- Integration testing
-- REST API documentation
+- Automated unit and integration testing
+- Expanded API documentation
 
 ---
 
