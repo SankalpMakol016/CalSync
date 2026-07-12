@@ -339,7 +339,6 @@ B.Tech Data Science & Engineering
 Manipal Institute of Technology
 
 - GitHub: [https://github.com/SankalpMakol016](https://github.com/SankalpMakol016)
-- LinkedIn: _placeholder_
 
 ---
 
