@@ -1,4 +1,4 @@
-
+import re
 import bcrypt
 import sys
 from datetime import datetime
@@ -9,6 +9,10 @@ from flask import Flask, jsonify, redirect, render_template, request, session
 from config.config import Config
 from exception.exception import CalSyncException
 from logger.logger import logger
+
+EMAIL_REGEX = re.compile(
+    r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
+)
 
 app = Flask(__name__)
 app.secret_key = Config.SECRET_KEY
@@ -55,16 +59,35 @@ def logout():
 # ── LOGIN API ─────────────────────────────────────────────────
 @app.route("/api/login", methods=["POST"])
 def api_login():
-    data = request.get_json() or {}
-    email = data.get("email")
-    password = data.get("password")
+    data = request.get_json(silent=True) or {}
+
+    email = (data.get("email") or "").strip().lower()
+    password = (data.get("password") or "").strip()
+
+    # Validate required fields
+    if not email or not password:
+        return jsonify({
+            "success": False,
+            "message": "Email and password are required."
+        }), 400
+
+    # Validate email format
+    if not EMAIL_REGEX.match(email):
+        return jsonify({
+            "success": False,
+            "message": "Invalid email address."
+        }), 400
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
 
-    # Get user by email only
+    # Fetch only required columns
     cursor.execute(
-        "SELECT * FROM users WHERE email=%s",
+        """
+        SELECT user_id, name, password
+        FROM users
+        WHERE email = %s
+        """,
         (email,)
     )
 
@@ -80,12 +103,14 @@ def api_login():
         session["user_id"] = user["user_id"]
         session["user_name"] = user["name"]
 
-        return jsonify({"success": True})
+        return jsonify({
+            "success": True
+        }), 200
 
     return jsonify({
         "success": False,
-        "message": "Invalid credentials"
-    })
+        "message": "Invalid credentials."
+    }), 401
 
 # ── GET EVENTS ────────────────────────────────────────────────
 # Returns events the user created PLUS events they accepted an invitation to
@@ -120,43 +145,94 @@ def get_events():
 @app.route("/api/events", methods=["POST"])
 def create_event():
     if not_logged_in():
-        return jsonify({"success": False})
+        return jsonify({
+            "success": False,
+            "message": "Unauthorized."
+        }), 401
 
-    data  = request.get_json() or {}
-    title = data.get("title")
-    start = data.get("start")
-    end   = data.get("end")
+    data = request.get_json(silent=True) or {}
 
+    title = (data.get("title") or "").strip()
+    start = (data.get("start") or "").strip()
+    end = (data.get("end") or "").strip()
+
+    # Required fields
     if not title or not start or not end:
-        return jsonify({"success": False, "message": "Missing fields"})
+        return jsonify({
+            "success": False,
+            "message": "Title, start time and end time are required."
+        }), 400
 
+    # Title length
+    if len(title) > 100:
+        return jsonify({
+            "success": False,
+            "message": "Title cannot exceed 100 characters."
+        }), 400
+
+    # Parse datetime
     try:
         start_dt = datetime.strptime(start, "%Y-%m-%dT%H:%M")
-        end_dt   = datetime.strptime(end,   "%Y-%m-%dT%H:%M")
-    except Exception:
-        return jsonify({"success": False, "message": "Invalid datetime format"})
+        end_dt = datetime.strptime(end, "%Y-%m-%dT%H:%M")
+    except ValueError:
+        return jsonify({
+            "success": False,
+            "message": "Invalid date or time format."
+        }), 400
 
+    # Logical validation
     if start_dt >= end_dt:
-        return jsonify({"success": False, "message": "End time must be after start time."})
+        return jsonify({
+            "success": False,
+            "message": "End time must be after start time."
+        }), 400
+
+    # Prevent creating past events
+    if start_dt < datetime.now():
+        return jsonify({
+            "success": False,
+            "message": "Cannot create an event in the past."
+        }), 400
 
     start_sql = start_dt.strftime("%Y-%m-%d %H:%M:%S")
-    end_sql   = end_dt.strftime("%Y-%m-%d %H:%M:%S")
+    end_sql = end_dt.strftime("%Y-%m-%d %H:%M:%S")
 
     db = get_db()
     cursor = db.cursor()
+
     try:
-        cursor.callproc("create_event", [title, start_sql, end_sql, session["user_id"]])
+        cursor.callproc(
+            "create_event",
+            [
+                title,
+                start_sql,
+                end_sql,
+                session["user_id"]
+            ]
+        )
+
         for _ in cursor.stored_results():
             pass
+
         db.commit()
-        cursor.close()
-        db.close()
-        return jsonify({"success": True, "message": "Event created successfully!"})
-    except mysql.connector.Error as err:
+
+        return jsonify({
+            "success": True,
+            "message": "Event created successfully."
+        }), 201
+
+    except Exception as e:
         db.rollback()
+        logger.exception(e)
+
+        return jsonify({
+            "success": False,
+            "message": "Unable to create event."
+        }), 500
+
+    finally:
         cursor.close()
         db.close()
-        return jsonify({"success": False, "message": err.msg})
 
 # ── DELETE EVENT ──────────────────────────────────────────────
 @app.route("/api/events/<int:event_id>", methods=["DELETE"])
@@ -276,44 +352,149 @@ def get_users():
 @app.route("/api/invite", methods=["POST"])
 def send_invite():
     if not_logged_in():
-        return jsonify({"success": False})
+        return jsonify({
+            "success": False,
+            "message": "Unauthorized."
+        }), 401
 
-    data        = request.get_json() or {}
-    event_id    = data.get("event_id")
+    data = request.get_json(silent=True) or {}
+
+    event_id = data.get("event_id")
     receiver_id = data.get("receiver_id")
-    sender_id   = session["user_id"]
+    sender_id = session["user_id"]
 
+    # Required fields
     if not event_id or not receiver_id:
-        return jsonify({"success": False, "message": "Missing fields"})
+        return jsonify({
+            "success": False,
+            "message": "Event ID and receiver are required."
+        }), 400
 
-    if int(receiver_id) == sender_id:
-        return jsonify({"success": False, "message": "You can't invite yourself"})
+    # Validate IDs
+    try:
+        event_id = int(event_id)
+        receiver_id = int(receiver_id)
+    except (ValueError, TypeError):
+        return jsonify({
+            "success": False,
+            "message": "Invalid event or receiver ID."
+        }), 400
+
+    # Prevent self-invitation
+    if receiver_id == sender_id:
+        return jsonify({
+            "success": False,
+            "message": "You can't invite yourself."
+        }), 400
 
     db = get_db()
-    cursor = db.cursor()
+    cursor = db.cursor(dictionary=True)
+
     try:
+        # Check event exists and fetch creator
         cursor.execute(
-            "SELECT invitation_id FROM event_invitations WHERE event_id=%s AND receiver_id=%s",
+            """
+            SELECT event_id, created_by
+            FROM events
+            WHERE event_id = %s
+            """,
+            (event_id,)
+        )
+
+        event = cursor.fetchone()
+
+        if not event:
+            return jsonify({
+                "success": False,
+                "message": "Event not found."
+            }), 404
+
+        # Only creator can invite users
+        if event["created_by"] != sender_id:
+            return jsonify({
+                "success": False,
+                "message": "Only the event creator can send invitations."
+            }), 403
+
+        # Check receiver exists
+        cursor.execute(
+            """
+            SELECT user_id
+            FROM users
+            WHERE user_id = %s
+            """,
+            (receiver_id,)
+        )
+
+        if not cursor.fetchone():
+            return jsonify({
+                "success": False,
+                "message": "User not found."
+            }), 404
+
+        # Already invited?
+        cursor.execute(
+            """
+            SELECT invitation_id
+            FROM event_invitations
+            WHERE event_id = %s
+              AND receiver_id = %s
+            """,
             (event_id, receiver_id)
         )
-        if cursor.fetchone():
-            cursor.close()
-            db.close()
-            return jsonify({"success": False, "message": "Already invited this user"})
 
+        if cursor.fetchone():
+            return jsonify({
+                "success": False,
+                "message": "User has already been invited."
+            }), 409
+
+        # Already participating?
         cursor.execute(
-            "INSERT INTO event_invitations (event_id, sender_id, receiver_id) VALUES (%s, %s, %s)",
+            """
+            SELECT 1
+            FROM event_participants
+            WHERE event_id = %s
+            AND user_id = %s
+            """,
+            (event_id, receiver_id)
+        )
+
+        if cursor.fetchone():
+            return jsonify({
+                "success": False,
+                "message": "User is already participating in this event."
+            }), 409
+
+        # Create invitation
+        cursor.execute(
+            """
+            INSERT INTO event_invitations
+            (event_id, sender_id, receiver_id)
+            VALUES (%s, %s, %s)
+            """,
             (event_id, sender_id, receiver_id)
         )
-        db.commit()
-        cursor.close()
-        db.close()
-        return jsonify({"success": True, "message": "Invitation sent!"})
-    except Exception as e:
-        cursor.close()
-        db.close()
-        return jsonify({"success": False, "message": str(e)})
 
+        db.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Invitation sent successfully."
+        }), 201
+
+    except Exception as e:
+        db.rollback()
+        logger.exception(e)
+
+        return jsonify({
+            "success": False,
+            "message": "Unable to send invitation."
+        }), 500
+
+    finally:
+        cursor.close()
+        db.close()
 # ── GET PENDING INVITATIONS FOR LOGGED-IN USER ────────────────
 @app.route("/api/invitations")
 def get_invitations():
@@ -351,28 +532,101 @@ def get_invitations():
 @app.route("/api/invitations/<int:inv_id>", methods=["POST"])
 def respond_invitation(inv_id):
     if not_logged_in():
-        return jsonify({"success": False})
+        return jsonify({
+            "success": False,
+            "message": "Unauthorized."
+        }), 401
 
-    data      = request.get_json() or {}
-    action    = data.get("action")           # "accept" or "decline"
-    status_id = 1 if action == "accept" else 2   # 1=accepted 2=declined
+    data = request.get_json(silent=True) or {}
+
+    action = (data.get("action") or "").strip().lower()
+
+    if action not in ("accept", "decline"):
+        return jsonify({
+            "success": False,
+            "message": "Invalid action."
+        }), 400
+
+    status_id = 1 if action == "accept" else 2
 
     db = get_db()
-    cursor = db.cursor()
+    cursor = db.cursor(dictionary=True)
+
     try:
+        # Check invitation exists and belongs to logged-in user
         cursor.execute(
-            "INSERT INTO invitation_responses (invitation_id, status_id) VALUES (%s, %s)",
+            """
+            SELECT invitation_id, receiver_id
+            FROM event_invitations
+            WHERE invitation_id = %s
+            """,
+            (inv_id,)
+        )
+
+        invitation = cursor.fetchone()
+
+        if not invitation:
+            return jsonify({
+                "success": False,
+                "message": "Invitation not found."
+            }), 404
+
+        if invitation["receiver_id"] != session["user_id"]:
+            return jsonify({
+                "success": False,
+                "message": "You are not authorized to respond to this invitation."
+            }), 403
+
+        # Already responded?
+        cursor.execute(
+            """
+            SELECT response_id
+            FROM invitation_responses
+            WHERE invitation_id = %s
+            """,
+            (inv_id,)
+        )
+
+        if cursor.fetchone():
+            return jsonify({
+                "success": False,
+                "message": "Invitation has already been responded to."
+            }), 409
+
+        cursor.execute(
+            """
+            INSERT INTO invitation_responses
+            (invitation_id, status_id)
+            VALUES (%s, %s)
+            """,
             (inv_id, status_id)
         )
+
         db.commit()
-        cursor.close()
-        db.close()
-        msg = "You joined the event!" if action == "accept" else "Invitation declined."
-        return jsonify({"success": True, "message": msg})
+
+        message = (
+            "You joined the event!"
+            if action == "accept"
+            else "Invitation declined."
+        )
+
+        return jsonify({
+            "success": True,
+            "message": message
+        }), 201
+
     except Exception as e:
+        db.rollback()
+        logger.exception(e)
+
+        return jsonify({
+            "success": False,
+            "message": "Unable to process invitation."
+        }), 500
+
+    finally:
         cursor.close()
         db.close()
-        return jsonify({"success": False, "message": str(e)})
 
 # ── RUN ───────────────────────────────────────────────────────
 if __name__ == "__main__":
