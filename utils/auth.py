@@ -6,7 +6,7 @@ from flask import jsonify, session
 EMAIL_REGEX = re.compile(
     r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
 )
-
+NAME_REGEX = re.compile(r"^[A-Za-z]+(?: [A-Za-z]+)*$")
 
 # ── LOGIN CHECK ───────────────────────────────────────────────
 def not_logged_in():

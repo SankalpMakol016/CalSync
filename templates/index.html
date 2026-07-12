@@ -3,81 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CalSync — Login</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>CalSync — Authentication</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body class="auth-page">
 
 <div class="auth-wrapper">
+
     <div class="auth-card">
 
         <div class="auth-logo">
             <span class="logo-icon">📅</span>
+
             <h1>CalSync</h1>
-            <p>Multi-User Calendar Management System</p>
+
+            <p>Collaborative Event Scheduling Platform</p>
+
+            <div class="auth-tabs">
+
+                <button
+                    id="loginTab"
+                    class="auth-tab active"
+                    type="button">
+
+                    Sign In
+
+                </button>
+
+                <button
+                    id="registerTab"
+                    class="auth-tab"
+                    type="button">
+
+                    Register
+
+                </button>
+
+            </div>
+
         </div>
 
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" placeholder="you@example.com" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Your password" required>
-            </div>
+        <!-- ================= LOGIN ================= -->
 
-            <div id="loginError" class="error-msg hidden"></div>
+        <div id="loginContainer">
 
-            <button type="submit" class="btn-primary" id="loginBtn">
-                Sign In
-            </button>
-        </form>
+            <form id="loginForm">
+
+                <div class="form-group">
+
+                    <label for="email">
+
+                        Email
+
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="you@example.com"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="password">
+
+                        Password
+
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Your password"
+                        required
+                    >
+
+                </div>
+
+                <div
+                    id="loginError"
+                    class="error-msg hidden">
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                    id="loginBtn">
+
+                    Sign In
+
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- ================= REGISTER ================= -->
+
+        <div
+            id="registerContainer"
+            class="auth-hidden">
+
+            <form id="registerForm">
+
+                <div class="form-group">
+
+                    <label for="registerName">
+
+                        Full Name
+
+                    </label>
+
+                    <input
+                        type="text"
+                        id="registerName"
+                        maxlength="100"
+                        placeholder="John Doe"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="registerEmail">
+
+                        Email
+
+                    </label>
+
+                    <input
+                        type="email"
+                        id="registerEmail"
+                        placeholder="you@example.com"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="registerPassword">
+
+                        Password
+
+                    </label>
+
+                    <input
+                        type="password"
+                        id="registerPassword"
+                        placeholder="Minimum 8 characters"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="confirmPassword">
+
+                        Confirm Password
+
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        placeholder="Confirm your password"
+                        required
+                    >
+
+                </div>
+
+                <div
+                    id="registerError"
+                    class="error-msg hidden">
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                    id="registerBtn">
+
+                    Create Account
+
+                </button>
+
+            </form>
+
+        </div>
 
         <p class="auth-footer">
-            Database Systems Lab — MIT Manipal
+
+            Built with Flask & MySQL
+
         </p>
 
     </div>
+
 </div>
 
-<script>
-    document.getElementById("loginForm").addEventListener("submit", async function(e) {
-        e.preventDefault();
-
-        const btn      = document.getElementById("loginBtn");
-        const errorDiv = document.getElementById("loginError");
-        const email    = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value.trim();
-
-        btn.textContent = "Signing in...";
-        btn.disabled    = true;
-        errorDiv.classList.add("hidden");
-
-        try {
-            const res  = await fetch("/api/login", {
-                method:  "POST",
-                headers: { "Content-Type": "application/json" },
-                body:    JSON.stringify({ email, password })
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                window.location.href = "/dashboard";
-            } else {
-                errorDiv.textContent = data.message;
-                errorDiv.classList.remove("hidden");
-                btn.textContent = "Sign In";
-                btn.disabled    = false;
-            }
-        } catch (err) {
-            errorDiv.textContent = "Could not connect to server. Is Flask running?";
-            errorDiv.classList.remove("hidden");
-            btn.textContent = "Sign In";
-            btn.disabled    = false;
-        }
-    });
-</script>
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
 
 </body>
 </html>

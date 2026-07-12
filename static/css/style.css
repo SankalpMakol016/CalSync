@@ -540,3 +540,60 @@ body {
         padding: 16px;
     }
 }
+/* ===========================================================
+   Authentication Tabs
+=========================================================== */
+
+.auth-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 20px;
+    margin-bottom: 24px;
+}
+
+.auth-tab {
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding-bottom: 6px;
+    transition: all 0.25s ease;
+}
+
+.auth-tab:hover {
+    color: #9ca3af;
+}
+
+.auth-tab.active {
+    color: #9ca3af;
+    border-bottom: 2px solid #4f46e5;
+    font-weight: 700;
+}
+
+
+/* ===========================================================
+   Authentication Forms
+=========================================================== */
+
+.auth-hidden {
+    display: none;
+}
+/* ===========================================================
+   Keep Authentication Card Stable
+=========================================================== */
+
+.auth-card {
+    min-height: 650px;
+}
+
+#loginContainer,
+#registerContainer {
+    width: 100%;
+}
+#loginContainer,
+#registerContainer {
+    transition: opacity 0.25s ease;
+}
